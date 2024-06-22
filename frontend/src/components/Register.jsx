@@ -21,14 +21,14 @@ const Register= ()=>{
     return (
         <form onSubmit={RegSubmit}>
             <h2 >Register</h2>
-            <label>Firstname :</label>
-            <input type="text" value={firstname} onChange={(e) =>setFirst(e.target.value)} required/> <br/>
-            <label>Lastname :</label>
-            <input type="text" value={lastname} onChange={(e) => setLast(e.target.value)} required/> <br/>
-            <label>Email :</label>
-            <input type="email" value={email} onChange={(e) =>setEmail(e.target.value)} required/> <br />
-            <label>Password :</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/> <br />
+            <label>Firstname: </label>
+            <input type="text" value={firstname} placeholder='Enter Your Firstname' onChange={(e) =>setFirst(e.target.value)} required/> <br/> <br /> 
+            <label>Lastname: </label>
+            <input type="text" value={lastname} placeholder='Enter Your Lastname' onChange={(e) => setLast(e.target.value)} required/> <br/> <br /> 
+            <label>Email: </label>
+            <input type="email" value={email} placeholder='Enter Your Email' onChange={(e) =>setEmail(e.target.value)} required/> <br /> <br /> 
+            <label>Password: </label>
+            <input type="password" value={password} placeholder='Enter Your Password' onChange={(e) => setPassword(e.target.value)} required/> <br /> <br /> 
             <button type="submit">Register</button>
         </form>
     );
