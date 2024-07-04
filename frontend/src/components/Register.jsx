@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { regData } from '../services/Register';
+import { useState,useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api';
+import { Context } from '../App.jsx';
 
 const Register = () => {
+    const {fetchUser}=useContext(Context);
     const [firstname, setFirst] = useState('');
     const [lastname, setLast] = useState('');
     const [email, setEmail] = useState('');
@@ -21,12 +23,17 @@ const Register = () => {
         e.preventDefault();
         try {
             const regInfo = { firstname, lastname, email, password ,type ,key};
-            const data = await regData(regInfo);
+            const response = await api.post('/register',regInfo);
+            const data = response.data;
             if (data && data.success && type=="User") {
                 console.log("Registered successfully ", data);
+                localStorage.setItem(user._id, data.token);
+                await fetchUser();
                 navigate('/problems');
             } else if(data && data.success && type=="Admin"){
                 console.log("Registered successfully ", data);
+                localStorage.setItem(user._id, data.token);
+                await fetchUser();
                 navigate('/admin');
             }else {
                 console.log("Registration failed ");

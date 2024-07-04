@@ -11,7 +11,7 @@ export const ProblemById = async (id) => {
                 }
             }
         );
-        return response;       
+        return response.data;       
     } catch (error) {
         console.log("Error while fetching problem by id ", error);
     }

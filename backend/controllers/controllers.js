@@ -1,12 +1,13 @@
 import User from "../models/Users.js";
 import Problem from "../models/Problems.js";
+import Submission from '../models/Submissions.js';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import axios from 'axios';
 dotenv.config();
 
-const compiler_server='http://localhost:5000';
+const compiler_server='http://compiler:5000';
 
 const Register = async (req, res) => {
   try {
@@ -149,6 +150,7 @@ const Login = async (req, res) => {
       message: "You have successfully logged in",
       success: true,
       token,
+      id:user._id
     });
   } catch (error) {
     console.log(error.message);
@@ -178,7 +180,7 @@ const ProblemById = async (req, res) => {
 };
 
 const RunCode = async(req,res)=>{
-  const { language="cpp",code, input="" } = req.body;
+  const { problemId,language="cpp",code, input="" } = req.body;
   
   if(code == undefined){
     return res.status(400).json({
@@ -188,7 +190,18 @@ const RunCode = async(req,res)=>{
   }
 
   try {
+    const problem = await Problem.findById(problemId);
+    if(!problem){
+      return res.status(400).json({
+        message: "Problem not found",
+        success: false
+      });
+    }
+    const time=problem.timeConstraints;
+    const space=problem.spaceConstraints;
     const response = await axios.post(`${compiler_server}/run`,{
+      time,
+      space,
       language,
       code, 
       input
@@ -196,10 +209,187 @@ const RunCode = async(req,res)=>{
 
     res.status(200).json(response.data);
   } catch (error) {
-    res.status(500).json({
-      message: "Error "+error.message,
+   if(error && error.response && error.response.data) return res.status(500).json({
+      message: "Error " +error.message,
+      type:error.response.data.type,
+      error_message:error.response.data.message,
       success: false
     });
+    return res.status(500).json({
+      message: "Error " +error.message,
+      success: false
+    });
+  }
+};
+
+const SubmitCode = async(req,res)=>{
+  const { problemId, language = "cpp", code } = req.body;
+  const userId=req.user.id;
+  if (!code) {
+      return res.status(400).json({
+          message: "Code is empty",
+          success: false
+      });
+  }
+
+  try {
+    const problem = await Problem.findById(problemId);
+    if(!problem){
+      return res.status(400).json({
+        message: "Problem not found",
+        success: false
+      });
+    }
+    const payload ={
+      problem,
+      language,
+      code,
+    };
+
+    const response = await axios.post(`${compiler_server}/submit`,payload);
+    const result = response.data.type || 'Unknown'; 
+    const submission_data={
+      user:userId,
+      problem:problem._id,
+      code,
+      language,
+      result
+    }
+
+    const new_submission = new Submission(submission_data);
+    await new_submission.save();
+
+    await User.findByIdAndUpdate(userId, {
+      $push: { submissions: new_submission._id } 
+    });
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.log("Error while submitting code ",error);
+    if(error && error.response && error.response.data)  return res.status(400).json({
+        message: 'Error while submitting code',
+        success: false,
+        error_message: error.response.data.message,
+        type: error.response.data.type  
+    });
+    return res.status(400).json({
+      message: 'Error while submitting code',
+      success: false,
+    });
+  }
+};
+
+const AllUsers=async(req,res)=>{
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (error) {
+    console.log("Error while fetching all the users ",error);
+    res.status(400).json({
+      message:"Error while fetching all the users",
+      success:false,
+    });
+  }
+};
+
+const DeleteUser=async(req,res)=>{
+  const { id } = req.params;
+  try {
+      await User.findByIdAndDelete(id);
+      res.status(204).json({ message: 'User deleted' });
+  } catch (error) {
+      res.status(404).json({ message: 'User was not found' });
+  }
+};
+
+const UpdateUser=async(req,res)=>{
+  const { id } = req.params;
+  const { firstname, lastname, UserType } = req.body;
+  const isAdmin = UserType == 'Admin';
+  try {
+      const updatedUser = await User.findByIdAndUpdate(id, { firstname, lastname, UserType,isAdmin }, { new: true });
+      res.status(200).json(updatedUser);
+  } catch (error) {
+      res.status(400).json({ message: error.message });
+  }
+};
+
+const Profile=async(req,res)=>{
+  const { id } = req.user;
+  try {
+    const user = await User.findById(id);
+    if(!user){
+      return res.status(401).json({ message: "User not found" ,success:false});  
+    }
+    res.status(200).json({firstname:user.firstname,lastname:user.lastname,email:user.email,UserType:user.UserType,user});
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const UpdateProfile=async(req,res)=>{
+  const { id } = req.user;
+  const { firstname, lastname, email, UserType } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(id, { firstname, lastname, email}, { new: true });
+    res.status(200).json({success:true,firstname:user.firstname,lastname:user.lastname,email:user.email,UserType:user.UserType});
+  }catch(error){
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const UpdateProblem=async(req,res)=>{
+  const {id}=req.params;
+  const { title, description, difficulty, constraints, timeConstraints, spaceConstraints, inputFormat, outputFormat, examples, testcases } = req.body;
+  try {
+    const problem = await Problem.findByIdAndUpdate(id, { title, description, difficulty, constraints, timeConstraints, spaceConstraints, inputFormat, outputFormat, examples, testcases }, 
+      { new: true,runValidators:true});
+    if (!problem) {
+      return res.status(404).json({ message: 'Problem not found' });
+    }
+
+    res.status(200).json(problem);
+  } catch (error) {
+    res.status(400).json({ message: "Error Updating problem" });
+  }
+};
+
+const DeleteProblem=async(req,res)=>{
+  const {id}=req.params;
+  try {
+    const problem = await Problem.findByIdAndDelete(id);
+    if (!problem) {
+      return res.status(404).json({ message: 'Problem not found' });
+    }
+    res.status(200).json({ message: 'Problem deleted successfully' });
+  } catch (error) {
+    res.status(400).json({message:"Error while deleting the problem"});
+  }
+};
+
+const AddProblem=async(req,res)=>{
+  const { title, description, difficulty, constraints, timeConstraints, spaceConstraints, inputFormat, outputFormat, examples, testcases } = req.body;
+  try {
+    const problem = await Problem.create({ title, description, difficulty, constraints, timeConstraints, spaceConstraints, inputFormat, outputFormat, examples, testcases });
+    res.status(200).json(problem);
+  } catch (error) {
+    res.status(400).json({ message: "Error while adding problem" });
+  }
+};
+
+const Submissions= async(req,res)=>{
+  try {
+
+    const submissions= await Submission.find({user:req.user.id}).populate('user').populate('problem').sort({timestamp:-1});
+    // const totalSubmissions = await Submission.countDocuments(query);
+
+    res.status(200).json(
+      submissions,
+      // totalSubmissions,
+      // totalPages: Math.ceil(totalSubmissions / limit),
+      // currentPage: parseInt(page)
+    ); 
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch submissions' });
   }
 };
 
@@ -208,7 +398,17 @@ const controller = {
   Login,
   Problems,
   ProblemById,
-  RunCode
+  RunCode,
+  SubmitCode,
+  AllUsers,
+  DeleteUser,
+  UpdateUser,
+  Profile,
+  UpdateProfile,
+  UpdateProblem,
+  DeleteProblem,
+  AddProblem,
+  Submissions,
 };
 
 export default controller;

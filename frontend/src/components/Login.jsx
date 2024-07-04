@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginData } from '../services/Login';
+import { Context } from '../App';
+import api from '../../api'
 
 const Login = () => {
+    const {fetchUser}=useContext(Context);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -18,14 +20,17 @@ const Login = () => {
         e.preventDefault();
         try {
             const logInfo = { email, password, type, key };
-            const data = await loginData(logInfo);
+            const response = await api.post('/login', logInfo);
+            const data=response.data;   
             if (data && data.success && type=="User") {
                 console.log("User's Logged in data ", data);
                 localStorage.setItem('token', data.token);
+                await fetchUser();
                 navigate('/problems');
             } else if(data && data.success && type=="Admin"){
                 console.log("Admin's Logged in data ", data);
                 localStorage.setItem('token', data.token);
+                await fetchUser();  
                 navigate('/admin');
             }else {
                 console.log(data ? data.message : 'Login failed!, Please try again.');

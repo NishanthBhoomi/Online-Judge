@@ -1,0 +1,372 @@
+/* Problem List Page Styles */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.header h1 {
+    text-align: center;
+    flex: 1;
+    color: #333; /* Dark grey color for the heading */
+}
+
+.header .buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.header .buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Profile Button */
+.header .buttons .profile-button {
+    background-color: #007bff; /* Blue color */
+}
+
+.header .buttons .profile-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Logout Button */
+.header .buttons .logout-button {
+    background-color: #dc3545; /* Red color */
+}
+
+.header .buttons .logout-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f4f4f4;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+}
+
+/* Edit Button */
+.table .buttons .edit-button {
+    background-color: #28a745; /* Green color */
+    color: #fff;
+}
+
+.table .buttons .edit-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Delete Button */
+.table .buttons .delete-button {
+    background-color: #ffc107; /* Yellow color */
+    color: #fff;
+}
+
+.table .buttons .delete-button:hover {
+    background-color: #e0a800; /* Darker yellow on hover */
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333; /* Dark grey color for modal heading */
+}
+
+/* Edit Form Styles */
+.edit-form label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #555; /* Darker grey color for labels */
+}
+
+.edit-form input, .edit-form textarea, .edit-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.edit-form textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+/* Example and Testcase Inputs */
+.example-input, .testcase-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.example-input input, .testcase-input input {
+    flex: 1;
+}
+
+.add-button {
+    background-color: #007bff; /* Blue color for Add buttons */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Remove Buttons */
+.example-input .remove-button, .testcase-input .remove-button {
+    background-color: #dc3545; /* Red color for Remove buttons */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.example-input .remove-button:hover, .testcase-input .remove-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Edit Form Button Group */
+.edit-form .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.edit-form .button-group .submit-button {
+    background-color: #28a745; /* Green color for Submit button */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit-form .button-group .submit-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.edit-form .button-group .close-button {
+    background-color: #6c757d; /* Gray color for Close button */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit-form .button-group .close-button:hover {
+    background-color: #5a6268; /* Darker gray on hover */
+}
+
+/* Delete Modal Styles */
+.modal-content .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.modal-content .button-group .yes-button {
+    background-color: #dc3545; /* Red color for Yes button */
+}
+
+.modal-content .button-group .yes-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+.modal-content .button-group .no-button {
+    background-color: #007bff; /* Blue color for No button */
+}
+
+.modal-content .button-group .no-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Add Problem Button Styles */
+.add-problem-container {
+    margin-bottom: 20px; /* Adjust spacing as needed */
+    display: flex;
+    justify-content: flex-start;
+}
+
+.add-problem-button {
+    background-color: #007bff; /* Blue color for Add Problem button */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-problem-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333; /* Dark grey color for modal heading */
+}
+
+/* Add Problem Form Styles */
+.add-form label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #555; /* Darker grey color for labels */
+}
+
+.add-form input, .add-form textarea, .add-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.add-form textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+/* Example and Testcase Inputs */
+.example-input, .testcase-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.example-input input, .testcase-input input {
+    flex: 1;
+}
+
+.add-button {
+    background-color: #007bff; /* Blue color for Add buttons */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Remove Buttons */
+.example-input .remove-button, .testcase-input .remove-button {
+    background-color: #dc3545; /* Red color for Remove buttons */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.example-input .remove-button:hover, .testcase-input .remove-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Add Problem Form Button Group */
+.add-form .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.add-form .button-group .submit-button {
+    background-color: #28a745; /* Green color for Submit button */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-form .button-group .submit-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.add-form .button-group .close-button {
+    background-color: #6c757d; /* Gray color for Close button */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-form .button-group .close-button:hover {
+    background-color: #5a6268; /* Darker gray on hover */
+}

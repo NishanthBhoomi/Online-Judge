@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  submissions:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Submission',
+  }],
 });
 
 const User = mongoose.model('User', userSchema);

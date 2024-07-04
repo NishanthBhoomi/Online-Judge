@@ -10,10 +10,10 @@ export const RunCode = async (payload) =>{
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         });
-
         return response.data;
     }
     catch(error){
         console.log("Error while running code ", error);
+        return error;
     }
 };

@@ -11,28 +11,59 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-export const executeCpp = async (filePath, input) => {
+export const compileCpp = async (filePath) => {
   const jobID = path.basename(filePath).split(".")[0];
-  const filename = `${jobID}.exe`;
+  const filename = `${jobID}.out`;
   const outPath = path.join(outputPath, filename);
 
   return new Promise((resolve, reject) => {
-    const process = exec(
-      `g++ ${filePath} -o ${outPath} && cd ${outputPath} && .\\${filename}`,
+    exec(
+      `g++ ${filePath} -o ${outPath} `,
       (error, stdout, stderr) => {
         if (error) {
-          reject(error);
+          return reject({ type: 'compilation', message: stderr || error.message });
         }
         if (stderr) {
-          reject(stderr);
+          return reject({ type: 'compilation', message: stderr });
         }
-
-        resolve(stdout);
+        resolve(outPath);
       }
     );
+  });
+};
+
+
+export const runExecutable = (executablePath, input, timeLimit, memoryLimitMB) => {
+  return new Promise((resolve, reject) => {
+    const startTime = process.hrtime();
+    const memoryLimitKB = memoryLimitMB * 1024; 
+
+    const command = `ulimit -v ${memoryLimitKB} && ${executablePath}`;
+
+    const execProcess = exec(command, { timeout: timeLimit * 1000, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
+      const [seconds, nanoseconds] = process.hrtime(startTime);
+      const elapsedTime = seconds + nanoseconds / 1e9; 
+
+      if (error) {
+        if (error.signal === 'SIGTERM') {
+          reject({ type: 'time', message: 'Time Limit Exceeded' });
+        } else if (stderr.includes('Memory limit exceeded')) {
+          reject({ type: 'memory', message: 'Memory Limit Exceeded' });
+        } else {
+          reject({ type: 'runtime', message: stderr || error.message });
+        }
+      } else if (elapsedTime > timeLimit) {
+        reject({ type: 'time', message: 'Time Limit Exceeded' });
+      } else if (stderr) {
+        reject({ type: 'runtime', message: stderr });
+      } else {
+        resolve(stdout);
+      }
+    });
+
     if (input) {
-      process.stdin.write(input);
-      process.stdin.end();
+      execProcess.stdin.write(input);
+      execProcess.stdin.end();
     }
   });
 };

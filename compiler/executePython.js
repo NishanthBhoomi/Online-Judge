@@ -11,20 +11,38 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-export const executePython = async (filePath, input) => {
+export const executePython = (filePath, input, timeLimit, memoryLimit) => {
   return new Promise((resolve, reject) => {
-    const process = exec(`python ${filePath}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
+    const startTime = process.hrtime();
+
+    const execProcess = exec(
+      `python ${filePath}`,
+      { timeout: timeLimit * 1000, maxBuffer: memoryLimit }, // Increased maxBuffer for larger outputs
+      (error, stdout, stderr) => {
+        const [seconds, nanoseconds] = process.hrtime(startTime);
+        const elapsedTime = seconds + nanoseconds / 1e9;
+
+        if (error) {
+          if (error.signal === 'SIGTERM') {
+            reject({ type: 'time', message: 'Time Limit Exceeded' });
+          } else if (stderr.includes('MemoryError')) {
+            reject({ type: 'memory', message: 'Memory Limit Exceeded' });
+          } else {
+            reject({ type: 'runtime', message: stderr || error.message });
+          }
+        } else if (elapsedTime > timeLimit) {
+          reject({ type: 'time', message: 'Time Limit Exceeded' });
+        } else if (stderr) {
+          reject({ type: 'runtime', message: stderr });
+        } else {
+          resolve(stdout);
+        }
       }
-      if (stderr) {
-        reject(stderr);
-      }
-      resolve(stdout);
-    });
+    );
+
     if (input) {
-      process.stdin.write(input);
-      process.stdin.end();
+      execProcess.stdin.write(input);
+      execProcess.stdin.end();
     }
   });
 };
