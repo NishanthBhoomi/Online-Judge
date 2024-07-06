@@ -1,13 +1,13 @@
 import {useState, useEffect, useContext} from 'react';
 import Modal from './CodeModal';
+import { useParams } from 'react-router-dom';
 import api from '../../api';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { coy as codeStyle } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { format } from 'date-fns';
-import { Context } from '../App';
 
-const Submissions = () => {
-    const {user}=useContext(Context);
+const SubmissionsbyId = () => {
+    const { problemId } = useParams();
     const [submissions, setSubmissions] = useState([]);
     const [Loading, setLoading]=useState(true);
     const [error, setError]=useState(null); 
@@ -18,7 +18,7 @@ const Submissions = () => {
     useEffect(()=>{
         const fetchSubmissions = async () => {
             try {
-                const response = await api.get('/submissions');
+                const response = await api.get(`/submissions/${problemId}`);
                 setSubmissions(response.data);
                 setLoading(false);
             } catch (error) {
@@ -28,7 +28,7 @@ const Submissions = () => {
             }
         };
         fetchSubmissions();
-    },[]);
+    },[problemId]);
 
     if(Loading){
         return <div>Loading...</div>;
@@ -67,7 +67,7 @@ const Submissions = () => {
                     {submissions.map((submission)=>(
                         <tr key={submission._id}>
                             <td>{submission.problem?.title || 'No Problem Title'}</td> 
-                            <td>{submission.language}</td>
+                            <td>{submission.language=='cpp'?'C++':submission.language==='py'?'Python':'Java'}</td>
                             <td>{submission.result}</td>
                             <td>{format(new Date(submission.timestamp), 'PPpp')}</td>
                             <td><button onClick={()=>openModal(submission.code,submission.langugage)}>&lt;/&gt;</button></td>
@@ -98,4 +98,4 @@ const Submissions = () => {
     );
 };
 
-export default Submissions;
+export default SubmissionsbyId;

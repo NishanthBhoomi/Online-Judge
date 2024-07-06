@@ -131,7 +131,7 @@ int main() {
 
     return (
         <div style={{ position: 'relative', height: '100vh', padding: '20px' }}>
-            <Link to="/submissions" style={{ position: 'absolute', top: '20px', right: '20px' }}>
+            <Link to={`/submissions/${problem._id}`} style={{ position: 'absolute', top: '20px', right: '20px' }}>
                 <button style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                     View Submissions
                 </button>

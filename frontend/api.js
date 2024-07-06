@@ -1,29 +1,26 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
-  timeout: 10000,  
+  baseURL: 'http://localhost:8000', // your backend URL
+  withCredentials: true, // allow cookies to be sent with each request
 });
 
-
 api.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  (config) => {
+    // No need to manually add the Authorization header, cookies will be sent automatically
     return config;
   },
-  error => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 api.interceptors.response.use(
-  response => response,
-  async error => {
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem('token');
-      // alert('Your session has expired. Please log in again.');
-      // window.location.href = '/login';
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      // Handle unauthorized error, e.g., redirect to login
+      console.log("Unauthorized, logging out...");
     }
     return Promise.reject(error);
   }

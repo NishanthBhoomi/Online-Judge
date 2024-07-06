@@ -36,18 +36,18 @@ export const compileCpp = async (filePath) => {
 export const runExecutable = (executablePath, input, timeLimit, memoryLimitMB) => {
   return new Promise((resolve, reject) => {
     const startTime = process.hrtime();
-    const memoryLimitKB = memoryLimitMB * 1024; 
+    const memoryLimitKB = memoryLimitMB * 1024 * 4; 
 
     const command = `ulimit -v ${memoryLimitKB} && ${executablePath}`;
 
-    const execProcess = exec(command, { timeout: timeLimit * 1000, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
+    const execProcess = exec(command, { timeout: timeLimit * 1000, maxBuffer: 1024 * 4096 }, (error, stdout, stderr) => {
       const [seconds, nanoseconds] = process.hrtime(startTime);
       const elapsedTime = seconds + nanoseconds / 1e9; 
 
       if (error) {
         if (error.signal === 'SIGTERM') {
           reject({ type: 'time', message: 'Time Limit Exceeded' });
-        } else if (stderr.includes('Memory limit exceeded')) {
+        } else if (stderr.includes('bad_alloc')) {
           reject({ type: 'memory', message: 'Memory Limit Exceeded' });
         } else {
           reject({ type: 'runtime', message: stderr || error.message });

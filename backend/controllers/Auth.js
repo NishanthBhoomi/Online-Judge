@@ -1,23 +1,20 @@
 import jwt from 'jsonwebtoken';
 
-const Auth=async(req,res,next)=>{
-    const authHeader = req.headers.authorization;
+const Auth = async (req, res, next) => {
+    const token = req.cookies.token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
         console.log('Unauthorized access: No token provided');
         return res.status(401).json({ message: "Unauthorized Access, No token", success: false });
     }
-    
-    const token = authHeader.split(' ')[1];
-    
-    try{
-        const decoded=jwt.verify(token,process.env.SECRET_KEY);
-        req.user=decoded;
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        req.user = decoded;
         next();
-    }
-    catch(err){
+    } catch (err) {
         console.log('Unauthorized access: Invalid token');
-        return res.status(401).json({message:"Unauthorized Access, Invalid token",success:false});
+        return res.status(401).json({ message: "Unauthorized Access, Invalid token", success: false });
     }
 };
 

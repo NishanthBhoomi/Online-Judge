@@ -1,7 +1,8 @@
 import { useState, useContext} from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Context } from '../App';
+import { useNavigate,Link } from 'react-router-dom';
+import { Context } from '../UserProvider';
 import api from '../../api'
+import './css/Login.css';
 
 const Login = () => {
     const {fetchUser}=useContext(Context);
@@ -19,17 +20,15 @@ const Login = () => {
         }
         e.preventDefault();
         try {
-            const logInfo = { email, password, type, key };
+            const logInfo = { email, password, type, key };            
             const response = await api.post('/login', logInfo);
             const data=response.data;   
             if (data && data.success && type=="User") {
                 console.log("User's Logged in data ", data);
-                localStorage.setItem('token', data.token);
                 await fetchUser();
                 navigate('/problems');
             } else if(data && data.success && type=="Admin"){
                 console.log("Admin's Logged in data ", data);
-                localStorage.setItem('token', data.token);
                 await fetchUser();  
                 navigate('/admin');
             }else {
@@ -41,28 +40,39 @@ const Login = () => {
     };
 
     return (
-        <div className="content">
-            <form onSubmit={loginSubmit}>
-                <h1>Login</h1>
-                <div>
-                    <strong>Sign In as: </strong>
-                    <input type="radio" name="UserType" value="User" onChange={(e) => setType(e.target.value)} />
-                    User
-                    <input type="radio" name='UserType' value='Admin' onChange={(e) => setType(e.target.value)} />
-                    Admin
-                </div>
-                <br />
-                <label>Email: </label>
-                <input type="email" value={email} placeholder='Enter Your Email' onChange={(e) => setEmail(e.target.value)} required /> <br /> <br />
-                <label>Password: </label>
-                <input type="password" value={password} placeholder='Enter Your Password' onChange={(e) => setPassword(e.target.value)} required /> <br /><br />
-                {type == "Admin" ? (
-                    <div>
-                        <label>Secret Key: </label>
-                        <input type="password" value={key} placeholder='Enter Secret Key' onChange={(e) => setKey(e.target.value)} required /> <br /><br />
-                    </div>) : null}
-                <button type="submit">Login</button>
-            </form>
+        <div className="login-page">
+            <div className="login-container">
+                <form onSubmit={loginSubmit} className='login-form'>
+                    <h1 className='login-heading'>Login</h1>
+                    <br />
+                    <div className='radio'>
+                        <strong>Sign In as: </strong>
+                        <label>
+                        <input type="radio" name="UserType" value="User" onChange={(e) => setType(e.target.value)} />
+                        User
+                        </label>
+                        <label>
+                        <input type="radio" name='UserType' value='Admin' onChange={(e) => setType(e.target.value)} />
+                        Admin
+                        </label>
+                    </div>
+                    
+                    <label>Email: </label>
+                    <input type="email" value={email} placeholder='Enter Your Email' onChange={(e) => setEmail(e.target.value)} required /> 
+                    <label>Password: </label>
+                    <input type="password" value={password} placeholder='Enter Your Password' onChange={(e) => setPassword(e.target.value)} required /> 
+                    {type == "Admin" ? (
+                        <div>
+                            <label>Secret Key: </label>
+                            <input type="password" value={key} placeholder='Enter Secret Key' onChange={(e) => setKey(e.target.value)} required />
+                        </div>) : null}
+                    
+                    <button type="submit" className='login-button'>Login</button>
+                    <p className="signup">
+                        Don't have an account? <Link to="/register">Sign up</Link>
+                    </p>
+                </form>
+            </div>
         </div>
     );
 };

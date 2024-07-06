@@ -1,98 +1,122 @@
-/* Problem List Page Styles */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap');
 
-.container {
-    max-width: 1200px;
+.problemlist-container {
+    max-width: 100%;
     margin: 0 auto;
     padding: 20px;
+    font-family: 'Roboto', sans-serif; /* Updated font-family */
 }
 
-.header {
+.problemlist-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 0;
+    border-bottom: 2px solid #ddd; /* Added border-bottom for visual separation */
 }
 
-.header h1 {
+.problemlist-header h1 {
+    font-family: 'Arial', sans-serif; /* Updated to Montserrat for the heading */
     text-align: center;
     flex: 1;
     color: #333; /* Dark grey color for the heading */
+    font-size: 1.5rem; /* Increased font size */
+    font-weight: 700;
+    font-size: 35px;
 }
 
-.header .buttons {
+.problemlist-header .problemlist-buttons {
     display: flex;
     gap: 10px;
 }
 
-.header .buttons button {
+.problemlist-header .problemlist-buttons button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     color: #fff;
     font-weight: bold;
+    font-size: 0.875rem; /* Added font-size */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
 }
 
 /* Profile Button */
-.header .buttons .profile-button {
+.problemlist-header .problemlist-buttons .problemlist-profile-button {
     background-color: #007bff; /* Blue color */
 }
 
-.header .buttons .profile-button:hover {
+.problemlist-header .problemlist-buttons .problemlist-profile-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Logout Button */
-.header .buttons .logout-button {
-    background-color: #dc3545; /* Red color */
+/* Submission Button */
+.problemlist-header .problemlist-buttons .problemlist-submission-button {
+    background-color: #05e82b; /* Green color */
 }
 
-.header .buttons .logout-button:hover {
+.problemlist-header .problemlist-buttons .problemlist-submission-button:hover {
+    background-color: #0ba117; /* Darker green on hover */
+}
+
+/* Logout Button */
+.problemlist-header .problemlist-buttons .problemlist-logout-button {
+    background-color: #f0061d; /* Red color */
+}
+
+.problemlist-header .problemlist-buttons .problemlist-logout-button:hover {
     background-color: #c82333; /* Darker red on hover */
 }
 
-.table {
+.problemlist-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added box-shadow */
 }
 
-.table th, .table td {
-    padding: 10px;
+.problemlist-table th, .problemlist-table td {
+    padding: 12px; /* Increased padding */
     border: 1px solid #ddd;
     text-align: left;
 }
 
-.table th {
+.problemlist-table th {
     background-color: #f4f4f4;
+    color: #333; /* Dark grey for the table header text */
+    font-weight: 700; /* Bold text for table headers */
 }
 
-.table tr:hover {
-    background-color: #f1f1f1; /* Highlight row on hover */
+.problemlist-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternating row colors */
+}
+
+.problemlist-table tr:hover {
+    background-color: #e2e6ea; /* Highlight row on hover */
 }
 
 /* Edit Button */
-.table .buttons .edit-button {
+.problemlist-table .problemlist-buttons .problemlist-edit-button {
     background-color: #28a745; /* Green color */
     color: #fff;
 }
 
-.table .buttons .edit-button:hover {
+.problemlist-table .problemlist-buttons .problemlist-edit-button:hover {
     background-color: #218838; /* Darker green on hover */
 }
 
 /* Delete Button */
-.table .buttons .delete-button {
-    background-color: #ffc107; /* Yellow color */
+.problemlist-table .problemlist-buttons .problemlist-delete-button {
+    background-color: #ffa600; /* Yellow color */
     color: #fff;
 }
 
-.table .buttons .delete-button:hover {
-    background-color: #e0a800; /* Darker yellow on hover */
+.problemlist-table .problemlist-buttons .problemlist-delete-button:hover {
+    background-color: #f6ba05; /* Darker yellow on hover */
 }
 
 /* Modal Styles */
-.modal {
+.problemlist-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -104,269 +128,204 @@
     justify-content: center;
 }
 
-.modal-content {
+.problemlist-modal-content {
     background: #fff;
-    padding: 20px;
-    border-radius: 5px;
+    padding: 30px; /* Increased padding */
+    border-radius: 8px; /* Rounded corners */
     width: 80%;
     max-width: 600px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
 }
 
-.modal-content h2 {
+.problemlist-modal-content h2 {
     margin-bottom: 20px;
     color: #333; /* Dark grey color for modal heading */
-}
-
-/* Edit Form Styles */
-.edit-form label {
-    display: block;
-    margin: 10px 0 5px;
-    color: #555; /* Darker grey color for labels */
-}
-
-.edit-form input, .edit-form textarea, .edit-form select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.edit-form textarea {
-    resize: vertical;
-    height: 100px;
-}
-
-/* Example and Testcase Inputs */
-.example-input, .testcase-input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.example-input input, .testcase-input input {
-    flex: 1;
-}
-
-.add-button {
-    background-color: #007bff; /* Blue color for Add buttons */
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.add-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}
-
-/* Remove Buttons */
-.example-input .remove-button, .testcase-input .remove-button {
-    background-color: #dc3545; /* Red color for Remove buttons */
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.example-input .remove-button:hover, .testcase-input .remove-button:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
-
-/* Edit Form Button Group */
-.edit-form .button-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.edit-form .button-group .submit-button {
-    background-color: #28a745; /* Green color for Submit button */
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.edit-form .button-group .submit-button:hover {
-    background-color: #218838; /* Darker green on hover */
-}
-
-.edit-form .button-group .close-button {
-    background-color: #6c757d; /* Gray color for Close button */
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.edit-form .button-group .close-button:hover {
-    background-color: #5a6268; /* Darker gray on hover */
+    font-size: 1.25rem; /* Increased font size */
+    font-weight: 700;
 }
 
 /* Delete Modal Styles */
-.modal-content .button-group {
+.problemlist-modal-content .problemlist-button-group {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 15px; /* Increased gap */
 }
 
-.modal-content .button-group .yes-button {
+.problemlist-modal-content .problemlist-button-group .problemlist-yes-button {
     background-color: #dc3545; /* Red color for Yes button */
 }
 
-.modal-content .button-group .yes-button:hover {
+.problemlist-modal-content .problemlist-button-group .problemlist-yes-button:hover {
     background-color: #c82333; /* Darker red on hover */
 }
 
-.modal-content .button-group .no-button {
+.problemlist-modal-content .problemlist-button-group .problemlist-no-button {
     background-color: #007bff; /* Blue color for No button */
 }
 
-.modal-content .button-group .no-button:hover {
+.problemlist-modal-content .problemlist-button-group .problemlist-no-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
 
 /* Add Problem Button Styles */
-.add-problem-container {
-    margin-bottom: 20px; /* Adjust spacing as needed */
+.problemlist-add-problem-container {
     display: flex;
     justify-content: flex-start;
 }
 
-.add-problem-button {
+.problemlist-add-problem-button {
     background-color: #007bff; /* Blue color for Add Problem button */
     color: #fff;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px; /* Increased padding */
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 0.875rem; /* Font size */
+    transition: background-color 0.3s ease; /* Smooth transition */
 }
 
-.add-problem-button:hover {
+.problemlist-add-problem-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Modal Styles */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    width: 80%;
-    max-width: 600px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.modal-content h2 {
-    margin-bottom: 20px;
-    color: #333; /* Dark grey color for modal heading */
-}
-
 /* Add Problem Form Styles */
-.add-form label {
+.problemlist-add-form label,.problemlist-edit-form label{
     display: block;
-    margin: 10px 0 5px;
+    margin: 12px 0 6px; /* Adjusted margin */
     color: #555; /* Darker grey color for labels */
 }
 
-.add-form input, .add-form textarea, .add-form select {
+.problemlist-add-form input, .problemlist-add-form textarea, .problemlist-add-form select,.problemlist-edit-form input, .problemlist-add-form textarea, .problemlist-add-form select {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
+    padding: 10px; /* Increased padding */
+    margin-bottom: 12px; /* Adjusted margin */
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.add-form textarea {
+.problemlist-add-form textarea, .problemlist-edit-form textarea {
     resize: vertical;
-    height: 100px;
+    height: 120px; /* Increased height */
 }
 
 /* Example and Testcase Inputs */
-.example-input, .testcase-input {
+.problemlist-example-input, .problemlist-testcase-input {
     display: flex;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px; /* Adjusted margin */
 }
 
-.example-input input, .testcase-input input {
+.problemlist-example-input input, .problemlist-testcase-input input {
     flex: 1;
 }
 
-.add-button {
-    background-color: #007bff; /* Blue color for Add buttons */
+.problemlist-add-button {
+    background-color: #ff7700; /* Orange color for Add buttons */
     color: #fff;
     border: none;
-    padding: 5px 10px;
+    padding: 6px 12px; /* Adjusted padding */
     border-radius: 5px;
     cursor: pointer;
 }
 
-.add-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+.problemlist-add-button:hover {
+    background-color: #b36200; /* Darker orange on hover */
 }
 
 /* Remove Buttons */
-.example-input .remove-button, .testcase-input .remove-button {
+.problemlist-example-input .problemlist-remove-button, .problemlist-testcase-input .problemlist-remove-button {
     background-color: #dc3545; /* Red color for Remove buttons */
     color: #fff;
     border: none;
-    padding: 5px 10px;
+    padding: 6px 12px; /* Adjusted padding */
     border-radius: 5px;
     cursor: pointer;
 }
 
-.example-input .remove-button:hover, .testcase-input .remove-button:hover {
+.problemlist-example-input .problemlist-remove-button:hover, .problemlist-testcase-input .problemlist-remove-button:hover {
     background-color: #c82333; /* Darker red on hover */
 }
 
 /* Add Problem Form Button Group */
-.add-form .button-group {
+.problemlist-add-form .problemlist-button-group,.problemlist-edit-form .problemlist-button-group {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: center;
+    gap: 15px; /* Increased gap */
 }
 
-.add-form .button-group .submit-button {
+.problemlist-add-form .problemlist-button-group .problemlist-submit-button,.problemlist-edit-form .problemlist-button-group .problemlist-submit-button {
     background-color: #28a745; /* Green color for Submit button */
     color: #fff;
-    padding: 10px 20px;
+    padding: 12px 24px; /* Increased padding */
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 0.875rem; /* Font size */
+    transition: background-color 0.3s ease; /* Smooth transition */
 }
 
-.add-form .button-group .submit-button:hover {
+.problemlist-add-form .problemlist-button-group .problemlist-submit-button:hover,.problemlist-edit-form .problemlist-button-group .problemlist-submit-button:hover {
     background-color: #218838; /* Darker green on hover */
 }
 
-.add-form .button-group .close-button {
+.problemlist-add-form .problemlist-button-group .problemlist-close-button,.problemlist-edit-form .problemlist-button-group .problemlist-close-button  {
     background-color: #6c757d; /* Gray color for Close button */
     color: #fff;
-    padding: 10px 20px;
+    padding: 12px 24px; /* Increased padding */
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 0.875rem; /* Font size */
+    transition: background-color 0.3s ease; /* Smooth transition */
 }
 
-.add-form .button-group .close-button:hover {
+.problemlist-add-form .problemlist-button-group .problemlist-close-button:hover,.problemlist-edit-form .problemlist-button-group .problemlist-close-button:hover {
     background-color: #5a6268; /* Darker gray on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .problemlist-container {
+        padding: 10px;
+    }
+
+    .problemlist-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .problemlist-header h1 {
+        text-align: left;
+        margin-bottom: 10px;
+    }
+
+    .problemlist-header .problemlist-buttons {
+        flex-wrap: wrap;
+    }
+
+    .problemlist-header .problemlist-buttons button {
+        margin-bottom: 10px;
+    }
+
+    .problemlist-modal-content {
+        width: 90%;
+        max-width: none;
+        padding: 15px;
+    }
+
+    .problemlist-add-problem-button {
+        padding: 10px 15px; /* Adjusted padding for smaller screens */
+    }
+
+    .problemlist-add-form input, .problemlist-add-form textarea, .problemlist-add-form select,.problemlist-edit-form input, .problemlist-add-form textarea, .problemlist-add-form select {
+        padding: 10px;
+        margin-bottom: 8px; /* Adjusted margin */
+    }
+
+    .problemlist-add-button, .problemlist-remove-button {
+        padding: 4px 8px; /* Adjusted padding for smaller screens */
+    }
 }

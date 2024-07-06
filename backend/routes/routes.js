@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.post("/register", controller.Register);
 router.post("/login", controller.Login);
+router.post("/logout", controller.Logout);
+
 router.get("/profile",Auth, controller.Profile);
 router.put("/update",Auth, controller.UpdateProfile);
 
@@ -22,5 +24,6 @@ router.put("/problem/:id",Auth,controller.UpdateProblem);
 router.delete("/problem/:id",Auth,controller.DeleteProblem);
 router.post("/problem",Auth,controller.AddProblem);
 
+router.get("/submissions/:id",Auth,controller.SubmissionsbyId);
 router.get("/submissions",Auth,controller.Submissions);
 export default router;

@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap');
+
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background: #f4f4f9;
+}
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.register-form {
+    width: 100%;
+}
+
+.register-heading {
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 1.5rem;
+    font-size: 30px;
+    text-align: center;
+    color: #333;
+}
+
+.radio-group {
+    margin-top: 3rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.radio-group strong {
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.radio-group label {
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.radio-group label input {
+    margin-right: 0.5rem;
+}
+
+.register-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #666;
+    font-family: 'Roboto', sans-serif;
+}
+
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.register-button {
+    width: 103.5%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+}
+
+.register-button:hover {
+    background-color: #0056b3;
+}
+
+.signin-text {
+    text-align: center;
+    margin-top: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.signin-text a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.signin-text a:hover {
+    text-decoration: underline;
+}

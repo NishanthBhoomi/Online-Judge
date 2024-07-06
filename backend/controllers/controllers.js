@@ -65,8 +65,14 @@ const Register = async (req, res) => {
     );
     user.token = token;
     user.password = undefined;
+    
+    const options = {
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+      // secure: true
+    };
 
-    return res.status(200).json({
+    return res.status(200).cookie("token", token, options).json({
       message: "You have successfully registered.",
       success: true,
       user,
@@ -155,6 +161,11 @@ const Login = async (req, res) => {
   } catch (error) {
     console.log(error.message);
   }     
+};
+
+const Logout=async(req, res) => {
+  res.clearCookie('token');
+  res.status(200).send({ message: 'Logged out successfully' });
 };
 
 const Problems =async(req,res)=>{
@@ -376,18 +387,20 @@ const AddProblem=async(req,res)=>{
   }
 };
 
+const SubmissionsbyId= async(req,res)=>{
+  const {id}=req.params;
+  try {
+    const submissions= await Submission.find({user:req.user.id,problem:id}).populate('user').populate('problem').sort({timestamp:-1});
+    res.status(200).json(submissions); 
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch submissions' });
+  }
+};
+
 const Submissions= async(req,res)=>{
   try {
-
     const submissions= await Submission.find({user:req.user.id}).populate('user').populate('problem').sort({timestamp:-1});
-    // const totalSubmissions = await Submission.countDocuments(query);
-
-    res.status(200).json(
-      submissions,
-      // totalSubmissions,
-      // totalPages: Math.ceil(totalSubmissions / limit),
-      // currentPage: parseInt(page)
-    ); 
+    res.status(200).json(submissions); 
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch submissions' });
   }
@@ -396,6 +409,7 @@ const Submissions= async(req,res)=>{
 const controller = {
   Register,
   Login,
+  Logout,
   Problems,
   ProblemById,
   RunCode,
@@ -408,7 +422,8 @@ const controller = {
   UpdateProblem,
   DeleteProblem,
   AddProblem,
-  Submissions,
+  SubmissionsbyId,
+  Submissions
 };
 
 export default controller;

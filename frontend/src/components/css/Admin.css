@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap');
 .header-container {
     display: flex;
     justify-content: center;
@@ -32,7 +33,7 @@
 }
 
 table {
-    font-family: arial,sans-serif;
+    font-family: Roboto,sans-serif;
     width: 100%;
     border-collapse: collapse;
 }

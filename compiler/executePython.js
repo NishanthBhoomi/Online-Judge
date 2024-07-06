@@ -17,16 +17,16 @@ export const executePython = (filePath, input, timeLimit, memoryLimit) => {
 
     const execProcess = exec(
       `python ${filePath}`,
-      { timeout: timeLimit * 1000, maxBuffer: memoryLimit }, // Increased maxBuffer for larger outputs
+      { timeout: timeLimit * 1000, maxBuffer: 1024 * 1024 }, // Increased maxBuffer for larger outputs
       (error, stdout, stderr) => {
         const [seconds, nanoseconds] = process.hrtime(startTime);
         const elapsedTime = seconds + nanoseconds / 1e9;
 
         if (error) {
-          if (error.signal === 'SIGTERM') {
-            reject({ type: 'time', message: 'Time Limit Exceeded' });
-          } else if (stderr.includes('MemoryError')) {
+          if (error.code==='ENOMEM' || stderr.includes('MemoryError')) {
             reject({ type: 'memory', message: 'Memory Limit Exceeded' });
+          }else if (error.signal === 'SIGTERM') {
+            reject({ type: 'time', message: 'Time Limit Exceeded' });
           } else {
             reject({ type: 'runtime', message: stderr || error.message });
           }

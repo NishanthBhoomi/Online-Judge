@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap');
+
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background: #f4f4f9;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-form {
+    width: 100%;
+}
+
+.login-heading {
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #333;
+}
+
+.radio {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.radio strong{
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.radio label {
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.radio label input{
+    margin-right:0.5rem;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #666;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-button {
+    width: 103.5%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.signup {
+    text-align: center;
+    margin-top: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.signup a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.signup a:hover {
+    text-decoration: underline;
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/Admin.css';
-import { Context } from '../App';
+import { Context } from '../UserProvider';
 import api from '../../api';
 
 const Admin = () => {

@@ -2,10 +2,10 @@ import { useState, useEffect, useContext } from 'react';
 import api from '../../api';
 import { useNavigate } from "react-router-dom";
 import './css/Problemlist.css';
-import { Context } from "../App";
+import { Context } from "../UserProvider";
 
 const Problemslist = () => {
-    const  {user}  = useContext(Context);
+    const  {user,fetchUser}  = useContext(Context);
     const [problems, setProblems] = useState([]);
     const [selected, setSelected] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
@@ -35,7 +35,6 @@ const Problemslist = () => {
         examples: [{ input: '', output: '' }],
         testcases: [{ input: '', output: '' }],
     });
-  
     const navigate = useNavigate();
 
     const fetchProblems = async () => {
@@ -60,10 +59,15 @@ const Problemslist = () => {
         navigate(`/problem/${id}`);
     };
 
-    const Logout=async()=>{
-      localStorage.removeItem("token");
-      navigate("/login");
+    const Logout = async () => {
+      try {
+        await api.post('/logout');
+        navigate("/login");
+      } catch (error) {
+        console.log("Error logging out", error);
+      }
     };
+
 
     const EditClick = (problem) => {
       setSelected(problem);
@@ -196,15 +200,22 @@ const Problemslist = () => {
     };
 
     return (
-        <div className="container">
-            <header className="header">
-              <h1>Problem List</h1>
-              <div className="buttons">
-                <button className='profile-button' onClick={()=>navigate("/profile")}>Profile</button>
-                <button className='logout-button' onClick={Logout}>Logout</button>
+        <div className="problemlist-container">
+            <header className="problemlist-header">
+            {user && user.isAdmin && (
+              <div className="problemlist-add-problem-container">
+                  <button className="problemlist-add-problem-button" onClick={() => setIsAdd(true)}>Add Problem</button>
+              </div>
+              )}
+
+              <h1>Problems</h1>
+              <div className="problemlist-buttons">
+                <button className="problemlist-submission-button" onClick={()=>navigate("/submissions")}>My Submissions</button>
+                <button className='problemlist-profile-button' onClick={()=>navigate("/profile")}>Profile</button>
+                <button className='problemlist-logout-button' onClick={Logout}>Logout</button>
               </div>
             </header>
-            <table className="table">
+            <table className="problemlist-table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -223,12 +234,12 @@ const Problemslist = () => {
                             <td>{problem.difficulty}</td>
                             {user && user.UserType === 'Admin' && (
                               <td> 
-                                <div className="buttons">
-                                  <button className='edit-button' onClick={(e) => {
+                                <div className="problemlist-buttons">
+                                  <button className='problemlist-edit-button' onClick={(e) => {
                                     e.stopPropagation();
                                     EditClick(problem);
                                     }}>Edit</button>
-                                  <button className='delete-button' onClick={(e) => {
+                                  <button className='problemlist-delete-button' onClick={(e) => {
                                     e.stopPropagation();
                                     DeleteClick(problem);
                                     }}>Delete</button>
@@ -240,10 +251,10 @@ const Problemslist = () => {
                 </tbody>
             </table>
             {isEdit && (
-                <div className="modal">
-                    <div className="modal-content">
+                <div className="problemlist-modal">
+                    <div className="problemlist-modal-content">
                         <h2>Edit Problem</h2>
-                        <form className='edit-form'>
+                        <form className='problemlist-edit-form'>
                             <label>Title: </label>
                             <input type="text" name="title" value={data.title} onChange={EditChange} placeholder='Title'/> <br />
                             
@@ -271,31 +282,31 @@ const Problemslist = () => {
                             
                             <h2>Examples: </h2>
                             {data.examples.map((example, index) => (
-                                <div key={index} className="example-input">
+                                <div key={index} className="problemlist-example-input">
                                     <label>Example {index+1}</label><br />
                                     <input type="text" placeholder="Input" value={example.input} onChange={(e) => ArrayChange(index, 'examples', 'input', e.target.value)}/>
                                     <input type="text" placeholder="Output" value={example.output} onChange={(e) => ArrayChange(index, 'examples', 'output', e.target.value)}/>
-                                    <button type="button" className="remove-button" onClick={() => ArrayRemove(index, 'examples')}>Remove</button>
+                                    <button type="button" className="problemlist-remove-button" onClick={() => ArrayRemove(index, 'examples')}>Remove</button>
                                 </div>
                             ))}
-                            <button type="button" className="add-button" onClick={() => ArrayAdd('examples')}>Add Example</button>
+                            <button type="button" className="problemlist-add-button" onClick={() => ArrayAdd('examples')}>Add Example</button>
                             <br />
 
                             <h2>Testcases: </h2>
                             {data.testcases.map((testcase, index) => (
-                                <div key={index} className="testcase-input">
+                                <div key={index} className="problemlist-testcase-input">
                                     <label>Testcase {index+1}</label><br />
                                     <input type="text" placeholder="Input" value={testcase.input} onChange={(e) => ArrayChange(index, 'testcases', 'input', e.target.value)}/>
                                     <input type="text" placeholder="Output" value={testcase.output} onChange={(e) => ArrayChange(index, 'testcases', 'output', e.target.value)}/>
-                                    <button type="button" className="remove-button" onClick={() => ArrayRemove(index, 'testcases')}>Remove</button>
+                                    <button type="button" className="problemlist-remove-button" onClick={() => ArrayRemove(index, 'testcases')}>Remove</button>
                                 </div>
                             ))}
-                            <button type="button" className="add-button" onClick={() => ArrayAdd('testcases')}>Add Testcase</button>
+                            <button type="button" className="problemlist-add-button" onClick={() => ArrayAdd('testcases')}>Add Testcase</button>
                             <br />
                                                         
-                            <div className='button-group'>
-                                <button type="button" className='submit-button' onClick={EditSubmit}>Submit</button>
-                                <button type='button' className="close-button" onClick={() => setIsEdit(false)}>Close</button>
+                            <div className='problemlist-button-group'>
+                                <button type="button" className='problemlist-submit-button' onClick={EditSubmit}>Submit</button>
+                                <button type='button' className="problemlist-close-button" onClick={() => setIsEdit(false)}>Close</button>
                             </div>
                         </form>
                     </div>
@@ -303,29 +314,23 @@ const Problemslist = () => {
             )}
 
             {isDelete && (
-                <div className="modal">
-                    <div className="modal-content">
+                <div className="problemlist-modal">
+                    <div className="problemlist-modal-content">
                         <h2>Delete Problem</h2>
                         <p>Are you sure you want to delete this Problem?</p>
-                        <div className="button-group">
-                            <button type='button' className="yes-button" onClick={DeleteSubmit}>Yes</button>
-                            <button type="button" className="no-button" onClick={() => setIsDelete(false)}>No</button>
+                        <div className="problemlist-button-group">
+                            <button type='button' className="problemlist-yes-button" onClick={DeleteSubmit}>Yes</button>
+                            <button type="button" className="problemlist-no-button" onClick={() => setIsDelete(false)}>No</button>
                         </div>
                     </div>
                 </div>
             )}
-
-           {user && user.isAdmin && (
-            <div className="add-problem-container">
-                <button className="add-problem-button" onClick={() => setIsAdd(true)}>Add Problem</button>
-            </div>
-            )}
-
+           
             {user && user.isAdmin && isAdd && (
-                <div className="modal">
-                    <div className="modal-content">
+                <div className="problemlist-modal">
+                    <div className="problemlist-modal-content">
                         <h2>Add New Problem</h2>
-                        <form className="add-form" onSubmit={AddSubmit}>
+                        <form className="problemlist-add-form" onSubmit={AddSubmit}>
                             <label>Title:</label>
                             <input type="text" name="title" value={newProblem.title} onChange={AddProblemChange} placeholder="Problem Title" required />
 
@@ -356,29 +361,29 @@ const Problemslist = () => {
 
                             <h2>Examples:</h2>
                             {newProblem.examples.map((example, index) => (
-                            <div key={index} className="example-input">
+                            <div key={index} className="problemlist-example-input">
                                 <label>Example {index+1}</label><br />
                                 <input type="text" name="input" value={example.input} onChange={(e) => AddExampleChange(e, index)} placeholder="Example Input" />
                                 <input type="text" name="output" value={example.output} onChange={(e) => AddExampleChange(e, index)} placeholder="Example Output" />
-                                <button type="button" className="remove-button" onClick={() => removeExample(index)}>Remove</button>
+                                <button type="button" className="problemlist-remove-button" onClick={() => removeExample(index)}>Remove</button>
                             </div>
                             ))}
-                            <button type="button" className="add-button" onClick={addExample}>Add Example</button>
+                            <button type="button" className="problemlist-add-button" onClick={addExample}>Add Example</button>
 
                             <h2>Testcases:</h2>
                             {newProblem.testcases.map((testcase, index) => (
-                              <div key={index} className="testcase-input">
+                              <div key={index} className="problemlist-testcase-input">
                                 <label>Testcase {index+1}</label><br />
                                 <input type="text" name="input" value={testcase.input} onChange={(e) => TestcaseChange(e, index)} placeholder="Testcase Input" />
                                 <input type="text" name="output" value={testcase.output} onChange={(e) => TestcaseChange(e, index)} placeholder="Testcase Output" />
-                                <button type="button" className="remove-button" onClick={() => removeTestcase(index)}>Remove</button>
+                                <button type="button" className="problemlist-remove-button" onClick={() => removeTestcase(index)}>Remove</button>
                               </div>
                             ))}
-                            <button type="button" className="add-button" onClick={addTestcase}>Add Testcase</button>
+                            <button type="button" className="problemlist-add-button" onClick={addTestcase}>Add Testcase</button>
 
-                            <div className="button-group">
-                                <button type="submit" className="submit-button">Submit</button>
-                                <button type="button" className="close-button" onClick={() => setIsAdd(false)}>Close</button>
+                            <div className="problemlist-button-group">
+                                <button type="submit" className="problemlist-submit-button">Submit</button>
+                                <button type="button" className="problemlist-close-button" onClick={() => setIsAdd(false)}>Close</button>
                             </div>
                         </form>
                     </div>
