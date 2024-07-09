@@ -207,6 +207,7 @@ const Problemslist = () => {
                   <button className="problemlist-add-problem-button" onClick={() => setIsAdd(true)}>Add Problem</button>
               </div>
               )}
+              <button className="problemlist-contests-button" onClick={() => navigate('/contests')}>Contests</button>
 
               <h1>Problems</h1>
               <div className="problemlist-buttons">

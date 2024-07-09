@@ -9,6 +9,9 @@ import Profile from './components/Profile';
 import Submissions from './components/Submissions';
 import SubmissionsbyId from './components/SubmissionsbyId';
 import UserProvider from './UserProvider';
+import Contests from './components/Contests';
+import ContestDetails from './components/ContestDetails';
+import CreateContest from './components/CreateContest';
 
 function App() {
   return (
@@ -26,6 +29,9 @@ function App() {
               <Route path='/profile' element={<Profile/>}/>
               <Route path='/submissions' element={<Submissions/>}></Route>
               <Route path='/submissions/:problemId' element={<SubmissionsbyId/>}></Route>
+              <Route path='/contests' element={<Contests/>}></Route>
+              <Route path="/contests/:id" element={<ContestDetails />} />
+              <Route path="/contest" element={<CreateContest />} />  
               <Route path="*" element={<h1> Page not found!</h1>} />
             </Routes>
           </UserProvider>

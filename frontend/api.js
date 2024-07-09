@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000', // your backend URL
+  baseURL: 'https://backend.codingjudge.online', // your backend URL
   withCredentials: true, // allow cookies to be sent with each request
 });
 

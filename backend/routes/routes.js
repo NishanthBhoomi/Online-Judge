@@ -26,4 +26,11 @@ router.post("/problem",Auth,controller.AddProblem);
 
 router.get("/submissions/:id",Auth,controller.SubmissionsbyId);
 router.get("/submissions",Auth,controller.Submissions);
+
+router.get("/contests",Auth,controller.AllContests);
+
+router.post("/contest",Auth,controller.CreateContest);
+router.get("/contests/:id",Auth,controller.ContestById);
+router.put("/contests/:id",Auth,controller.UpdateContest);
+router.delete("/contests/:id",Auth,controller.DeleteContest);
 export default router;

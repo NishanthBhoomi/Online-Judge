@@ -69,6 +69,7 @@ const Admin = () => {
         <div>
             <div className="header-container">
                 <h1>Admin Page</h1>
+                <button className="contests-button" onClick={() => navigate('/contests')}>Contests</button>
                 <button className="problems-button" onClick={() => navigate('/problems')}>Problems</button>
             </div>
             <table>

@@ -1,13 +1,14 @@
 import User from "../models/Users.js";
 import Problem from "../models/Problems.js";
 import Submission from '../models/Submissions.js';
+import Contest from '../models/Contests.js';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import axios from 'axios';
 dotenv.config();
 
-const compiler_server='http://compiler:5000';
+const compiler_server='https://compiler.codingjudge.online';
 
 const Register = async (req, res) => {
   try {
@@ -406,6 +407,66 @@ const Submissions= async(req,res)=>{
   }
 };
 
+const AllContests=async(req,res)=>{
+  try {
+    const contests = await Contest.find();
+    res.status(200).json(contests);
+  } catch (error) {
+    res.status(400).json({ message: "Error fetching contests" });
+  }
+};
+
+const ContestById=async(req,res)=>{
+  const {id}=req.params;
+  try {
+    const contest = await Contest.findById(id);
+    if(!contest){
+      return res.status(404).json({ message: "Contest not found" });
+    }
+    res.status(200).json(contest);
+  } catch(error){
+    res.status(400).json({ message: "Error fetching contest" });
+  }
+};
+
+const UpdateContest=async(req,res)=>{
+  const {id}=req.params;
+  const { title, description, startTime, endTime, problems } = req.body;
+  try {
+    const contest = await Contest.findByIdAndUpdate(id, { title, description, startTime, endTime, problems }, { new: true });
+    if (!contest) {
+      return res.status(404).json({ message: 'Contest not found' });
+    }
+    res.status(200).json(contest);
+  } catch (error) {
+    res.status(400).json({ message: "Error Updating contest" });
+  }
+};
+
+const DeleteContest=async(req,res)=>{
+  const {id}=req.params;
+  try {
+    const contest = await Contest.findByIdAndDelete(id);
+    if (!contest) {
+      return res.status(404).json({ message: 'Contest not found' });
+    }
+    res.status(200).json({ message: 'Contest deleted successfully' });
+  } catch (error) {
+    res.status(400).json({message:"Error while deleting the contest"});
+  }
+};
+
+const CreateContest = async (req, res) => {
+  try {
+      const { title, description, startTime, endTime ,problems} = req.body;
+      const newContest = new Contest({ title, description, startTime, endTime,problems});
+      await newContest.save();
+      res.status(201).json(newContest);
+  } catch (error) {
+      res.status(500).json({ message: 'Error creating contest', error });
+  }
+};
+
 const controller = {
   Register,
   Login,
@@ -423,7 +484,12 @@ const controller = {
   DeleteProblem,
   AddProblem,
   SubmissionsbyId,
-  Submissions
+  Submissions,
+  AllContests,
+  ContestById,
+  UpdateContest,
+  DeleteContest,
+  CreateContest
 };
 
 export default controller;
