@@ -126,6 +126,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: auto;
+    max-height: 100vh;
 }
 
 .problemlist-modal-content {
@@ -134,14 +136,27 @@
     border-radius: 8px; /* Rounded corners */
     width: 80%;
     max-width: 600px;
+    overflow: auto;
+    max-height: 90vh; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
 }
 
-.problemlist-modal-content h2 {
+.problemlist-modal-content h2{
     margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
     color: #333; /* Dark grey color for modal heading */
     font-size: 1.25rem; /* Increased font size */
     font-weight: 700;
+}
+
+.problemlist-modal-content h1{
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    color: #333; /* Dark grey color for modal heading */
+    font-size: 1.75rem; /* Increased font size */
+    font-weight: 800;
 }
 
 /* Delete Modal Styles */
@@ -205,6 +220,7 @@
 }
 
 .problemlist-add-form textarea, .problemlist-edit-form textarea {
+    width: 100%;
     resize: vertical;
     height: 120px; /* Increased height */
 }
@@ -284,48 +300,4 @@
 
 .problemlist-add-form .problemlist-button-group .problemlist-close-button:hover,.problemlist-edit-form .problemlist-button-group .problemlist-close-button:hover {
     background-color: #5a6268; /* Darker gray on hover */
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .problemlist-container {
-        padding: 10px;
-    }
-
-    .problemlist-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .problemlist-header h1 {
-        text-align: left;
-        margin-bottom: 10px;
-    }
-
-    .problemlist-header .problemlist-buttons {
-        flex-wrap: wrap;
-    }
-
-    .problemlist-header .problemlist-buttons button {
-        margin-bottom: 10px;
-    }
-
-    .problemlist-modal-content {
-        width: 90%;
-        max-width: none;
-        padding: 15px;
-    }
-
-    .problemlist-add-problem-button {
-        padding: 10px 15px; /* Adjusted padding for smaller screens */
-    }
-
-    .problemlist-add-form input, .problemlist-add-form textarea, .problemlist-add-form select,.problemlist-edit-form input, .problemlist-add-form textarea, .problemlist-add-form select {
-        padding: 10px;
-        margin-bottom: 8px; /* Adjusted margin */
-    }
-
-    .problemlist-add-button, .problemlist-remove-button {
-        padding: 4px 8px; /* Adjusted padding for smaller screens */
-    }
 }

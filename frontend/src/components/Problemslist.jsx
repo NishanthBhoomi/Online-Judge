@@ -254,7 +254,7 @@ const Problemslist = () => {
             {isEdit && (
                 <div className="problemlist-modal">
                     <div className="problemlist-modal-content">
-                        <h2>Edit Problem</h2>
+                        <h1>Edit Problem</h1>
                         <form className='problemlist-edit-form'>
                             <label>Title: </label>
                             <input type="text" name="title" value={data.title} onChange={EditChange} placeholder='Title'/> <br />
@@ -317,7 +317,7 @@ const Problemslist = () => {
             {isDelete && (
                 <div className="problemlist-modal">
                     <div className="problemlist-modal-content">
-                        <h2>Delete Problem</h2>
+                        <h1>Delete Problem</h1>
                         <p>Are you sure you want to delete this Problem?</p>
                         <div className="problemlist-button-group">
                             <button type='button' className="problemlist-yes-button" onClick={DeleteSubmit}>Yes</button>
@@ -330,7 +330,7 @@ const Problemslist = () => {
             {user && user.isAdmin && isAdd && (
                 <div className="problemlist-modal">
                     <div className="problemlist-modal-content">
-                        <h2>Add New Problem</h2>
+                        <h1>Add New Problem</h1>
                         <form className="problemlist-add-form" onSubmit={AddSubmit}>
                             <label>Title:</label>
                             <input type="text" name="title" value={newProblem.title} onChange={AddProblemChange} placeholder="Problem Title" required />
