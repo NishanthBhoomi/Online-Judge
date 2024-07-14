@@ -20,28 +20,28 @@ const Home = () => {
                 <h2>Features</h2>
                 <div className="feature-items">
                     <div className="feature-item">
-                        <img src="../../assets/Problems.jpg" alt="Programming Problems" className="feature-icon" />
+                        <img src="/assets/Problems.jpg" alt="Programming Problems" className="feature-icon" />
                         <div className="feature-description">
                             <h3>Wide Range of Programming Problems</h3>
                             <p>Explore a vast collection of problems for all skill levels.</p>
                         </div>
                     </div>
                     <div className="feature-item">
-                        <img src="../../assets/code.jpg" alt="Real-Time Coding Environment" className="feature-icon" />
+                        <img src="/assets/code.jpg" alt="Real-Time Coding Environment" className="feature-icon" />
                         <div className="feature-description">
                             <h3>Real-Time Coding Environment</h3>
                             <p>Write and test your code with instant results.</p>
                         </div>
                     </div>
                     <div className="feature-item">
-                        <img src="../../assets/Contests.jpg" alt="Competitive Contests" className="feature-icon" />
+                        <img src="/assets/Contests.jpg" alt="Competitive Contests" className="feature-icon" />
                         <div className="feature-description">
                             <h3>Competitive Programming Contests</h3>
                             <p>Join contests and compete with programmers and improve your problem solving skills.</p>
                         </div>
                     </div>
                     <div className="feature-item centered-feature">
-                        <img src="../../assets/Rankings.png" alt="Leaderboards and Rankings" className="feature-icon" />
+                        <img src="/assets/Rankings.png" alt="Leaderboards and Rankings" className="feature-icon" />
                         <div className="feature-description">
                             <h3>Leaderboards and Rankings</h3>
                             <p>Track your progress and compete for top spots.</p>
@@ -54,7 +54,7 @@ const Home = () => {
                 <p>
                     Sign up, solve problems, participate in contests, and track your progress and keep on improving your programming skills.
                 </p>
-                <img src="../../assets/sign_up.jpeg" alt="How It Works" className="sign-up-image" />
+                <img src="/assets/sign_up.jpeg" alt="How It Works" className="sign-up-image" />
             </section>
         </div>
     );
