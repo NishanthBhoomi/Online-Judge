@@ -5,10 +5,10 @@ import api from '../../api';
 import { format } from 'date-fns';
 import './css/Submissions.css';
 
-import cppImage from '../../assets/c++.jpg';
-import javaImage from '../../assets/java.jpg';
-import pythonImage from '../../assets/python.jpg';
-import cImage from '../../assets/C.jpeg';
+import cppImage from '/assets/c++.jpg';
+import javaImage from '/assets/java.jpg';
+import pythonImage from '/assets/python.jpg';
+import cImage from '/assets/C.jpeg';
 
 const languageSymbols = {
     cpp: cppImage,
