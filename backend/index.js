@@ -12,7 +12,7 @@ const app= express();
 
 //middlewares
 app.use(cors({
-    origin: 'https://codingjudge.online',
+    origin: 'http://localhost:5173',
     credentials: true
 }));
 app.use(cookieParser());

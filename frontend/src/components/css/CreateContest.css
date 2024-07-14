@@ -1,38 +1,117 @@
-.createcontest-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.createcontest-modal-content {
-    background: white;
+.createcontest-container {
     padding: 20px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 600px;
+    top:100px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f7f7e0;
 }
 
-.createcontest-example-input, .createcontest-testcase-input {
+.createcontest-header {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 40px;
+}
+
+.createcontest-header h1 {
+    color: #333;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.createcontest-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.createcontest-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+.createcontest-form input,
+.createcontest-form textarea,
+.createcontest-form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.createcontest-form input[type="datetime-local"] {
+    width: 97%;
+}
+
+.createcontest-form textarea {
+    width: 97%;
+    height: 120px;
+}
+
+.createcontest-form .problems-list {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.createcontest-form .problem-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
 }
 
-.createcontest-example-input input, .createcontest-testcase-input input {
-    display: block;
-    width: 100%;
-    margin-bottom: 5px;
+.createcontest-form .problem-item label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.add-problem-button {
-    background-color: #4CAF50;
-    color: white;
+.createcontest-form .problem-item input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.createcontest-form .problem-item input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.createcontest-form .add-problem-button {
+    background-color: red;
+    color: #fff;
     border: none;
-    padding: 10px 20px;
+    width: 49%;
+    padding: 12px 24px;
+    border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.createcontest-form .add-problem-button:hover {
+    background-color: darkred;
+}
+
+.createcontest-form button[type="submit"] {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    margin-left: 407.5px;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: -57px;
+    font-weight: bold;
+    width: 49%;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.createcontest-form button[type="submit"]:hover {
+    background-color: #218838;
 }

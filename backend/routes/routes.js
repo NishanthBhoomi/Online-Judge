@@ -33,4 +33,13 @@ router.post("/contest",Auth,controller.CreateContest);
 router.get("/contests/:id",Auth,controller.ContestById);
 router.put("/contests/:id",Auth,controller.UpdateContest);
 router.delete("/contests/:id",Auth,controller.DeleteContest);
-export default router;
+
+router.get("/contests/:id/submissions",Auth,controller.GetContestSubmissions);
+router.get("/contests/:id/users/:userId/submissions",Auth,controller.UserContestSubmissions);
+router.delete("/contests/:id/submissions/:problemId",Auth,controller.DeleteContestSubmission);
+
+router.get("/contests/:id/results",Auth,controller.ContestResults);
+
+router.post("/contests/:id/register",Auth, controller.registerForContest);
+router.get("/contests/:id/isRegistered",Auth, controller.checkRegistration);
+export default router;     

@@ -1,109 +1,105 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap');
 
-
+/* General Styles */
 .login-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100%;
-    background: #f4f4f9;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f3f4f6, #e0e2e7); /* Gradient background */
+    font-family: 'Arial', sans-serif;
 }
 
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 500px;
-    padding: 2rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
 }
 
 .login-form {
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.login-heading {
-    font-family: 'Arial', sans-serif;
-    margin-bottom: 1.5rem;
+.login-heading{
     text-align: center;
-    color: #333;
+    font-family: 'Arial', sans-serif;
 }
 
-.radio {
+.login-type-section {
     display: flex;
+    margin-top: 1rem;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 1rem;
-    font-family: 'Roboto', sans-serif;
-}
-
-.radio strong{
-    margin-right: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.radio label {
-    font-weight: 500;
-    color: #333;
-    display: flex;
-    align-items: center;
-    margin-right: 1rem;
-}
-
-.radio label input{
-    margin-right:0.5rem;
-}
-
-.login-form label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #666;
-    font-family: 'Roboto', sans-serif;
-}
-
-.login-form input[type="email"],
-.login-form input[type="password"] {
     width: 100%;
-    padding: 0.5rem;
     margin-bottom: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: 'Roboto', sans-serif;
+}
+
+.user-type .MuiFormControlLabel-root {
+    font-size: 0.875rem;
+    color: #555;
+}
+
+.user-type .MuiFormControlLabel-root .MuiRadio-root {
+    color: #007bff;
 }
 
 .login-button {
-    width: 103.5%;
-    padding: 0.75rem;
-    margin-top: 0.5rem;
+    background-color: #007bff; /* Blue color */
+    color: #fff;
+    padding: 12px;
     border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-    font-size: 1rem;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
     transition: background-color 0.3s ease;
-    font-family: 'Roboto', sans-serif;
 }
 
 .login-button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
 .signup {
     text-align: center;
-    margin-top: 1rem;
-    font-family: 'Roboto', sans-serif;
+    color: #555;
 }
 
 .signup a {
-    color: #007bff;
+    color: #007bff; /* Blue color for link */
     text-decoration: none;
+    font-weight: bold;
 }
 
 .signup a:hover {
     text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 20px;
+    }
+
+    .login-heading {
+        font-size: 1.5rem; /* Adjusted font size for smaller screens */
+    }
+
+    .user-type {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .user-type .MuiFormControlLabel-root {
+        font-size: 0.75rem; /* Adjusted font size for smaller screens */
+    }
+
+    .login-button {
+        padding: 10px;
+        font-size: 0.875rem; /* Adjusted font size for smaller screens */
+    }
 }

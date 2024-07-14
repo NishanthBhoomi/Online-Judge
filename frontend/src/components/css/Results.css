@@ -1,0 +1,92 @@
+/* results.css */
+
+/* Container for the Results component */
+.results-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background: #ffffff; /* White background for the results */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* Header section for Results component */
+.results-header {
+    padding: 1.5rem 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.results-header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    color: black; /* White text color */
+}
+
+/* Table container for Results component */
+.results-table-container {
+    width: 100%;
+    overflow-x: auto; /* Horizontal scrollbar for responsive tables */
+}
+
+/* Table styling */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white; /* White background for the table */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Table header */
+.results-table thead {
+    background: #007bff; /* Blue background for table header */
+}
+
+/* Table header cells */
+.results-table th {
+    justify-content: center;
+    padding: 1rem;
+    text-align: left;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Table data cells */
+.results-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #ddd;
+    text-align: center; /* Center-align text */
+}
+
+
+.results-table tr:nth-child(even) {
+    background-color: #f1f1f1; /* Alternate row color */
+}
+
+
+/* Row hover effect */
+.results-table tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .results-table th,
+    .results-table td {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+    }
+
+    .results-header h1 {
+        font-size: 2rem;
+    }
+}

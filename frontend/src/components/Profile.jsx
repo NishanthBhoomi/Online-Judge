@@ -69,7 +69,6 @@ const Profile = () => {
 
     return (
         <div className='profile-container'>
-            <button onClick={handleBack} className="back-button">Back to Problems</button>
             <h1>Profile</h1>
             <form onSubmit={handleSubmit} className="profile-form">
                 <div className="form-group">

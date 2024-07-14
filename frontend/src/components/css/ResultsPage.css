@@ -1,0 +1,55 @@
+/* resultsPage.css */
+
+/* Container for the ResultsPage component */
+.results-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Button to refresh results */
+.refresh-results-button {
+    background-color: #007bff; /* Blue color for the button */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    position: absolute; /* Absolute positioning */
+    top: 11rem; 
+    right: 18rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.refresh-results-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.refresh-results-button:disabled {
+    background-color: #6c757d; /* Gray color for disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Add some margin to the Results component to separate it from the button */
+.results-container {
+    background-color: #f5febf;
+    margin-top: 3rem; /* Increased margin for more space */
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .refresh-results-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        top: 0.5rem; /* Adjusted for smaller screens */
+        right: 0.5rem;
+    }
+
+    .results-page-container {
+        padding: 1rem;
+    }
+}

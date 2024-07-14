@@ -1,199 +1,193 @@
-/* ContestDetails.css */
-
-/* Container */
+/* Container for the contest details */
 .contest-details-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background: #f0f4f8;
+    min-height: 100%;
 }
 
-/* Header */
 .contest-details-header {
-    background-color: #f8f8f8;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-radius: 12px; 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #ddd; 
 }
 
+/* Title of the contest */
 .contest-details-header h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
+    font-size: 2.8rem;
+    color: #222;
+    margin-bottom: 1rem;
 }
 
 .contest-details-header p {
-    margin: 5px 0;
-    font-size: 1rem;
+    font-size: 1.1rem; 
+    color: #555; 
+    margin: 0.5rem 0;
 }
 
-.contest-details-header p strong {
+.contest-details-header p:last-of-type {
     font-weight: bold;
+    color: #d9534f;
 }
 
 .contest-add-problem-button,
-.contest-edit-button {
-    background-color: #007bff;
+.contest-edit-button,
+.contest-details-container button {
+    background-color: #007bff; 
     color: #fff;
     border: none;
-    padding: 10px 20px;
-    margin: 10px 5px;
-    border-radius: 5px;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    margin: 0.5rem;
     cursor: pointer;
-    font-size: 1rem;
+    transition: background-color 0.3s;
+    font-size: 1rem; 
 }
 
 .contest-add-problem-button:hover,
-.contest-edit-button:hover {
-    background-color: #0056b3;
+.contest-edit-button:hover,
+.contest-details-container button:hover {
+    background-color: #0056b3; 
 }
 
-/* Modal */
-.contest-details-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.contest-add-problem-button {
+    background-color: #28a745; 
 }
 
-.contest-details-modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 700px;
-    max-width: 90%;
-    max-height: 90%;
-    /* Limit the height to make it scrollable */
-    overflow: auto;
-    /* Make it scrollable */
+.contest-add-problem-button:hover {
+    background-color: #218838;
 }
 
-
-.contest-details-edit-form,
-.contest-details-add-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.contest-details-edit-form label,
-.contest-details-add-form label {
-    margin-top: 10px;
-}
-
-.contest-details-edit-form input,
-.contest-details-edit-form textarea,
-.contest-details-add-form input,
-.contest-details-add-form textarea,
-.contest-details-edit-form select,
-.contest-details-add-form select {
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-}
-
-.contest-details-edit-form button,
-.contest-details-add-form button {
-    margin-top: 15px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.contest-details-edit-form button[type="button"],
-.contest-details-add-form button[type="button"] {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.contest-details-edit-form button[type="button"]:hover,
-.contest-details-add-form button[type="button"]:hover {
-    background-color: #0056b3;
-}
-
-.contest-details-edit-form button[type="button"]:nth-child(2),
-.contest-details-add-form button[type="button"]:nth-child(2) {
-    background-color: #dc3545;
-    margin-left: 10px;
-}
-
-.contest-details-edit-form button[type="button"]:nth-child(2):hover,
-.contest-details-add-form button[type="button"]:nth-child(2):hover {
-    background-color: #c82333;
-}
-
-/* Table */
 .contest-details-problems-table {
-    width: 100%;
+    width: 65%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
 .contest-details-problems-table th,
 .contest-details-problems-table td {
-    padding: 10px;
+    padding: 12px; 
     border: 1px solid #ddd;
     text-align: left;
+    font-size: 1rem;
 }
 
 .contest-details-problems-table th {
-    background-color: #f1f1f1;
+    background-color: #fbe045;
+    color: black;
+    font-weight: bold;
 }
 
 .contest-details-problems-table tr:hover {
-    background-color: #f9f9f9;
+    background-color: #f1f1f1; 
 }
 
 .contest-details-problems-table button {
-    padding: 5px 10px;
+    padding: 6px 12px; 
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 0.9rem; 
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .contest-details-problems-table .contest-edit-button {
-    background-color: #ffc107;
+    background-color: #ff8c00; 
     color: #000;
 }
 
 .contest-details-problems-table .contest-edit-button:hover {
-    background-color: #e0a800;
+    background-color: #ff6400;
 }
 
 .contest-details-problems-table .contest-delete-button {
-    background-color: #dc3545;
+    background-color: red; 
     color: #fff;
 }
 
 .contest-details-problems-table .contest-delete-button:hover {
-    background-color: #c82333;
+    background-color: darkred;
 }
 
-/* Example and Testcase Form Groups */
-.example-form-group,
-.testcase-form-group {
-    margin-top: 20px;
+.contest-details-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; 
+}
+
+.contest-details-modal-content {
+    background: #ffffff; 
+    padding: 2rem;
+    border-radius: 12px; 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px; 
+    max-height: 80vh; 
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.contest-details-modal-content h2 {
+    font-size: 1.8rem;
+    color: #333; 
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.contest-details-edit-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.contest-details-edit-form label {
+    font-size: 1rem;
+    color: #555; 
+}
+
+.contest-details-edit-form input,
+.contest-details-edit-form textarea {
+    padding: 0.75rem;
     border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
 }
 
-.example-form-group button,
-.testcase-form-group button {
-    margin-top: 10px;
-    background-color: #dc3545;
-    color: #fff;
+.contest-details-edit-form textarea {
+    resize: vertical; 
+    min-height: 100px;
 }
 
-.example-form-group button:hover,
-.testcase-form-group button:hover {
+.contest-details-edit-form button.save-button {
+    margin-top: 1rem;
+    background-color: #28a745; 
+}
+
+.contest-details-edit-form button.save-button:hover {
+    background-color: #218838;
+}
+
+.contest-details-edit-form button.cancel-button {
+    background-color: #dc3545; 
+}
+
+.contest-details-edit-form button.cancel-button:hover {
     background-color: #c82333;
 }

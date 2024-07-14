@@ -3,7 +3,6 @@ import api from '../../api';
 import { useParams, useNavigate } from "react-router-dom";
 import './css/ContestDetails.css';
 import { Context } from "../UserProvider";
-import moment from 'moment-timezone';
 
 const ContestDetails = () => {
     const { user } = useContext(Context);
@@ -30,7 +29,8 @@ const ContestDetails = () => {
         inputFormat: '',
         outputFormat: '',
         examples: [{ input: '', output: '' }],
-        testcases: [{ input: '', output: '' }]
+        testcases: [{ input: '', output: '' }],
+        score:''
     });
     const [newProblem, setNewProblem] = useState({
         title: '',
@@ -43,26 +43,56 @@ const ContestDetails = () => {
         outputFormat: '',
         examples: [{ input: '', output: '' }],
         testcases: [{ input: '', output: '' }],
+        score:''
     });
     const { id } = useParams();
     const navigate = useNavigate();
     const [timer, setTimer] = useState('');
-    const [submissions, setSubmissions] = useState([]);
-    const [results, setResults] = useState([]);
-    const [isViewSubmissions, setIsViewSubmissions] = useState(false);
-    const [isViewResults, setIsViewResults] = useState(false);
+    const [isRegistered, setIsRegistered] = useState(false);
+    const [registrationError, setRegistrationError] = useState("");
+    
+    const checkRegistration = async () => {
+        try {
+            const response = await api.get(`/contests/${id}/isRegistered`);
+            setIsRegistered(response.data.isRegistered);
+        } catch (error) {
+            console.error("Error checking registration:", error);
+        }
+    };
+
+    const handleRegister = async () => {
+        try {
+            const now = new Date();
+            const offset=5.5*60*60*1000;
+            const startTime = new Date(contest.startTime).getTime()-offset;
+            if (now.getTime() < startTime) {
+                await api.post(`/contests/${id}/register`, {});
+                setIsRegistered(true);
+                setRegistrationError("");
+            }else{
+                alert("Contest has already started. You cannot register now.");
+            }
+        } catch (error) {
+            setRegistrationError("Registration failed. Please try again.");
+            console.error("Error registering for contest:", error);
+        }
+    };
     
     const fetchContestDetails = async () => {
         try {
             const response = await api.get(`/contests/${id}`);
             setContest(response.data);
             const contestData=response.data;
-            const problemIds=contestData.problems;
+            const problemIds=contestData.problems.map(p=>p.problem);
+
             if (problemIds && problemIds.length > 0) {
                 const problemsResponse = await Promise.all(
                     problemIds.map((problemId) => api.get(`/problem/${problemId}`))
                 );
-                const problemsData = problemsResponse.map((res) => res.data);
+                const problemsData = problemsResponse.map((res, index) => ({
+                    ...res.data,
+                    score: contestData.problems[index].score
+                }));
                 setProblems(problemsData);
             } else {
                 setProblems([]);
@@ -71,12 +101,23 @@ const ContestDetails = () => {
             console.error("Error fetching contest details:", error);
         }
     };
-    
+
     useEffect(() => {
         fetchContestDetails();
     }, [id,contest.endTime,contest.startTime]);
 
-    	
+    useEffect(() => {
+        fetchContestDetails();
+        if (user && user.isAdmin) {
+            setIsRegistered(true); 
+        }
+        else if(user) {
+            checkRegistration();
+        }
+        
+    }, [id, user]);
+    
+
     useEffect(() => {
         const updateTimer = () => {
             if (contest) {
@@ -103,9 +144,27 @@ const ContestDetails = () => {
 
         return () => clearInterval(interval);
     }, [contest]);
-    
+
+
     const handleProblemClick = (problemId) => {
-        navigate(`/problem/${problemId}`);
+        const now = new Date();
+        const offset=5.5*60*60*1000;
+        const startTime = new Date(contest.startTime).getTime()-offset;
+        const endTime = new Date(contest.endTime).getTime()-offset;
+
+        if(user && !user.isAdmin){
+            if (now.getTime() >= startTime && now.getTime() <= endTime && !isRegistered) {
+                alert("You need to register for the contest to view the problems.");
+                return;
+            }
+            if(now.getTime()<startTime){
+                alert("Contest has not started yet.");
+                return;
+            }
+        }
+
+        const contestId=id;
+        navigate(`/problem/${problemId}`,{state:{contestId}});
     };
 
     const handleEditProblemClick = (problem) => {
@@ -120,7 +179,8 @@ const ContestDetails = () => {
             inputFormat: problem.inputFormat,
             outputFormat: problem.outputFormat,
             examples: problem.examples,
-            testcases: problem.testcases
+            testcases: problem.testcases,
+            score:problem.score
         });
         setIsEditProblem(true);
     };
@@ -209,28 +269,33 @@ const ContestDetails = () => {
         setEditData({ ...editData, [arrayName]: newArray });
     };
 
-    const editProblemSubmit = async () => {
-        try {
-            await api.put(`/problem/${selectedProblem._id}`, editData);
-            setProblems(problems.map(p => p._id === selectedProblem._id ? { ...p, ...editData } : p));
-        } catch (error) {
-            console.error("Error updating problem:", error);
-        }
-    };
-
     const editContestProblem = async () => {
         try {
-            await api.put(`/contests/${id}`, { problems: problems.map(p => p._id) });
-            setContest({ ...contest, problems: problems.map(p => p._id) });
+            const updatedProblems = problems.map(p =>
+                p._id === selectedProblem._id ? { ...p, ...editData } : p
+            );
+            await api.put(`/problem/${selectedProblem._id}`, editData);
+            const updatedContestProblems = updatedProblems.map(p => ({ problem: p._id, score: p.score }));
+    
+            await api.put(`/contests/${id}`, { problems: updatedContestProblems });
+    
+            setProblems(updatedProblems);
+            setContest({ ...contest, problems: updatedContestProblems });
+    
             setIsEditProblem(false);
         } catch (error) {
             console.log("Couldn't update contest problems", error);
         }
     };
-
+    
+    
     const deleteProblemSubmit = async () => {
         try {
             setProblems(problems.filter(p => p._id !== selectedProblem._id));
+            await api.put(`/contests/${id}`, { problems: contest.problems.filter(p => p.problem !== selectedProblem._id) });
+            const problemId=selectedProblem._id;
+            await api.delete(`/contests/${id}/submissions/${problemId}`);
+            setContest({ ...contest, problems: contest.problems.filter(p => p.problem !== selectedProblem._id) });
             setIsDeleteProblem(false);
         } catch (error) {
             console.error("Error deleting problem:", error);
@@ -242,6 +307,13 @@ const ContestDetails = () => {
         try {
             const response = await api.post('/problem', newProblem);
             setProblems([...problems, response.data]);
+            const problemId = response.data._id;
+            const updatedContest = {
+                ...contest,
+                problems: [...contest.problems, { problem: problemId, score: newProblem.score }]
+            };
+            await api.put(`/contests/${id}`, updatedContest);
+            fetchContestDetails();
             setNewProblem({
                 title: '',
                 description: '',
@@ -253,6 +325,7 @@ const ContestDetails = () => {
                 outputFormat: '',
                 examples: [{ input: '', output: '' }],
                 testcases: [{ input: '', output: '' }],
+                score:''
             });
             setIsAddProblem(false);
         } catch (error) {
@@ -357,9 +430,7 @@ const ContestDetails = () => {
 
     return (
         <div className="contest-details-container">
-            {contest ? (
-                <>
-                    <header className="contest-details-header">
+            <header className="contest-details-header">
                 <h1>{contest.title}</h1>
                 <p><strong>Description: </strong>{contest.description}</p>
                 <p><strong>Start Time: </strong>{contest && formatDate(contest.startTime)} IST</p>
@@ -372,31 +443,21 @@ const ContestDetails = () => {
                     <button className="contest-edit-button" onClick={handleEditContestClick}>Edit Contest</button>
                     </>
                 )}
+                {user && !user.isAdmin && !isRegistered && new Date() < new Date(contest.startTime) && (
+                    <button onClick={handleRegister}>Register for Contest</button>
+                )}
+                {registrationError && <p className="registration-error">{registrationError}</p>}
+
+                <button onClick={()=>{navigate(`/contests/${id}/submissions`)}}>View All Submissions</button>
+                <button onClick={()=>{navigate(`/contests/${id}/users/${user._id}/submissions`)}}>My Submissions</button>
+                <button onClick={()=>{navigate(`/contests/${id}/results`)}}>View Results</button>
             </header>
-            {isEditContest && (
-            <div className="contest-details-modal">
-                <div className="contest-details-modal-content">
-                    <h2>Edit Contest</h2>
-                    <form className='contest-details-edit-form'>
-                        <label>Title: </label>
-                        <input type="text" name="title" value={editContestData.title} onChange={handleEditContestChange} />
-                        <label>Description: </label>
-                        <textarea name="description" value={editContestData.description} onChange={handleEditContestChange} />
-                        <label>Start Time: </label>
-                        <input type="datetime-local" name="startTime" value={editContestData.startTime} onChange={handleStartTimeChange} />
-                        <label>End Time: </label>
-                        <input type="datetime-local" name="endTime" value={editContestData.endTime} onChange={handleEndTimeChange} />
-                        <button type="button" onClick={editContestSubmit}>Save Changes</button>
-                        <button type="button" onClick={() => setIsEditContest(false)}>Cancel</button>
-                    </form>
-                </div>
-            </div>
-            )}
             <table className="contest-details-problems-table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Title</th>
+                        <th>Score</th>
                         <th>Difficulty</th>
                         {user && user.isAdmin && (
                             <th>Actions</th>
@@ -409,6 +470,7 @@ const ContestDetails = () => {
                             
                             <td>{index + 1}</td>
                             <td>{problem.title}</td>
+                            <td>{problem.score}</td>
                             <td>{problem.difficulty}</td>
                             {user && user.isAdmin && (
                                 <td>
@@ -426,171 +488,157 @@ const ContestDetails = () => {
                     ))}
                 </tbody>
             </table>
-
+            {isEditContest && (
+            <div className="contest-details-modal">
+                <div className="contest-details-modal-content">
+                    <h2>Edit Contest</h2>
+                    <form className='contest-details-edit-form'>
+                        <label><h4>Title:</h4></label>
+                        <input type="text" name="title" value={editContestData.title} onChange={handleEditContestChange} />
+                        <label><h4>Description:</h4></label>
+                        <textarea name="description" value={editContestData.description} onChange={handleEditContestChange} />
+                        <label><h4>Start Time:</h4></label>
+                        <input type="datetime-local" name="startTime" value={editContestData.startTime} onChange={handleStartTimeChange} />
+                        <label><h4>End Time:</h4></label>
+                        <input type="datetime-local" name="endTime" value={editContestData.endTime} onChange={handleEndTimeChange} />
+                        <button type="button" className="button save-button" onClick={editContestSubmit}>Save Changes</button>
+                        <button type="button" className="button cancel-button" onClick={() => setIsEditContest(false)}>Cancel</button>
+                    </form>
+                </div>
+            </div>
+            )}
             {isEditProblem && (
-                <div className="contest-details-modal">
-                    <div className="contest-details-modal-content">
-                        <h2>Edit Problem</h2>
-                        <form className='contest-details-edit-form'>
-                            <label>Title: </label>
+                <div className="problemlist-modal">
+                    <div className="problemlist-modal-content">
+                        <h1>Edit Problem</h1>
+                        <form className='problemlist-edit-form'>
+                            <label><h4>Title: </h4></label>
                             <input type="text" name="title"
                             value={editData.title} onChange={handleEditChange} />
-                            <label>Description: </label>
+                            <label><h4>Description: </h4></label>
                             <textarea name="description" value={editData.description} onChange={handleEditChange} />
-                            <label>Difficulty: </label>
+                            <label><h4>Difficulty: </h4></label>
                             <select name="difficulty" value={editData.difficulty} onChange={handleEditChange}>
                                 <option value="easy">Easy</option>
                                 <option value="medium">Medium</option>
                                 <option value="hard">Hard</option>
                             </select>
-                            <label>Constraints: </label>
+                            <label><h4>Constraints: </h4></label>
                             <textarea name="constraints" value={editData.constraints} onChange={handleEditChange} />
-                            <label>Time Constraints: </label>
+                            <label><h4>Time Constraints: </h4></label>
                             <input type="text" name="timeConstraints" value={editData.timeConstraints} onChange={handleEditChange} />
-                            <label>Space Constraints: </label>
+                            <label><h4>Space Constraints: </h4></label>
                             <input type="text" name="spaceConstraints" value={editData.spaceConstraints} onChange={handleEditChange} />
-                            <label>Input Format: </label>
+                            <label><h4>Input Format: </h4></label>
                             <textarea name="inputFormat" value={editData.inputFormat} onChange={handleEditChange} />
-                            <label>Output Format: </label>
+                            <label><h4>Output Format: </h4></label>
                             <textarea name="outputFormat" value={editData.outputFormat} onChange={handleEditChange} />
 
-                            <h3>Examples</h3>
+                            <h2>Examples</h2>
                             {editData.examples.map((example, index) => (
-                                <div key={index} className="example-form-group">
-                                    <label>Example {index + 1} Input :</label>
-                                    <input
-                                        name="input"
-                                        value={example.input}
-                                        onChange={(e) => handleArrayChange(index, 'examples', 'input', e.target.value)}
-                                    /> <br />
-                                    <label>Example {index + 1} Output: </label>
-                                    <input
-                                        name="output"
-                                        value={example.output}
-                                        onChange={(e) => handleArrayChange(index, 'examples', 'output', e.target.value)}
-                                    />
-                                    <button type="button" onClick={() => handleArrayRemove(index, 'examples')}>Remove Example</button>
+                                <div key={index} className="problemlist-example-input">
+                                    <label><strong>Example {index + 1} </strong></label>
+                                    <input name="input" value={example.input} onChange={(e) => handleArrayChange(index, 'examples', 'input', e.target.value)}/> <br />
+                                    <input name="output" value={example.output} onChange={(e) => handleArrayChange(index, 'examples', 'output', e.target.value)}/>
+                                    <button type="button" className="problemlist-remove-button" onClick={() => handleArrayRemove(index, 'examples')}>Remove Example</button>
                                 </div>
                             ))}
-                            <button type="button" onClick={() => handleArrayAdd('examples')}>Add Example</button>
+                            <button type="button" className="problemlist-add-button" onClick={() => handleArrayAdd('examples')}>Add Example</button>
 
-                            <h3>Test Cases</h3>
+                            <h2>Test Cases</h2>
                             {editData.testcases.map((testcase, index) => (
-                                <div key={index} className="testcase-form-group">
-                                    <label>Test Case {index + 1} Input: </label>
-                                    <input
-                                        name="input"
-                                        value={testcase.input}
-                                        onChange={(e) => handleArrayChange(index, 'testcases', 'input', e.target.value)}
-                                    /> <br />
-                                    <label>Test Case {index + 1} Output: </label>
-                                    <input
-                                        name="output"
-                                        value={testcase.output}
-                                        onChange={(e) => handleArrayChange(index, 'testcases', 'output', e.target.value)}
-                                    />
-                                    <button type="button" onClick={() => handleArrayRemove(index, 'testcases')}>Remove Test Case</button>
+                                <div key={index} className="problemlist-testcase-input">
+                                    <label><strong>Test Case {index + 1} </strong></label><br />
+                                    <input name="input" value={testcase.input} onChange={(e) => handleArrayChange(index, 'testcases', 'input', e.target.value)}/> <br />
+                                    <input name="output" value={testcase.output} onChange={(e) => handleArrayChange(index, 'testcases', 'output', e.target.value)}/>
+                                    <button type="button" className="problemlist-remove-button" onClick={() => handleArrayRemove(index, 'testcases')}>Remove Test Case</button>
                                 </div>
                             ))}
-                            <button type="button" onClick={() => handleArrayAdd('testcases')}>Add Test Case</button>
-
-                            <button type="button" onClick={()=>{
-                                editProblemSubmit();
-                                editContestProblem();
-                                }}>Save Changes</button>
-                            <button type="button" onClick={() => setIsEditProblem(false)}>Cancel</button>
+                            <button type="button" className="problemlist-add-button" onClick={() => handleArrayAdd('testcases')}>Add Test Case</button>
+                            <br /> <br />
+                            <label><h4>Score: </h4></label>
+                            <input type="number" name="score" value={editData.score} onChange={handleEditChange} />
+                            
+                            <div className='problemlist-button-group'>
+                                <button type="button" className='problemlist-submit-button' onClick={editContestProblem}>Submit</button>
+                                <button type="button" className='problemlist-close-button' onClick={() => setIsEditProblem(false)}>Close</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             )}
 
             {isDeleteProblem && (
-                <div className="contest-details-modal">
-                    <div className="contest-details-modal-content">
+                <div className="problemlist-modal">
+                    <div className="problemlist-modal-content">
+                        <h1>Delete Problem</h1> 
                         <h2>Are you sure you want to delete this problem?</h2>
-                        <button type="button" onClick={()=>{
-                            deleteProblemSubmit();
-                            editContestProblem();
-                            }}>Yes</button>
-                        <button type="button" onClick={() => setIsDeleteProblem(false)}>No</button>
+                        <div className="problemlist-button-group">
+                            <button type="button" className="problemlist-yes-button" onClick={deleteProblemSubmit}>Yes</button>
+                            <button type="button" className="problemlist-no-button" onClick={() => setIsDeleteProblem(false)}>No</button>
+                        </div>
                     </div>
                 </div>
             )}
 
             {isAddProblem && (
-                <div className="contest-details-modal">
-                    <div className="contest-details-modal-content">
+                <div className="problemlist-modal">
+                    <div className="problemlist-modal-content">
                         <h2>Add New Problem</h2>
-                        <form className='contest-details-add-form' onSubmit={addProblemSubmit}>
-                            <label>Title: </label>
+                        <form className='problemlist-add-form' onSubmit={addProblemSubmit}>
+                            <label><h4>Title: </h4></label>
                             <input type="text" name="title" value={newProblem.title} onChange={handleAddProblemChange} />
-                            <label>Description: </label>
+                            <label><h4>Description: </h4></label>
                             <textarea name="description" value={newProblem.description} onChange={handleAddProblemChange} />
-                            <label>Difficulty: </label>
+                            <label><h4>Difficulty: </h4></label>
                             <select name="difficulty" value={newProblem.difficulty} onChange={handleAddProblemChange}>
                                 <option value="easy">Easy</option>
                                 <option value="medium">Medium</option>
                                 <option value="hard">Hard</option>
                             </select>
-                            <label>Constraints: </label>
+                            <label><h4>Constraints: </h4></label>
                             <textarea name="constraints" value={newProblem.constraints} onChange={handleAddProblemChange} />
-                            <label>Time Constraints: </label>
+                            <label><h4>Time Constraints: </h4></label>
                             <input type="text" name="timeConstraints" value={newProblem.timeConstraints} onChange={handleAddProblemChange} />
-                            <label>Space Constraints: </label>
+                            <label><h4>Space Constraints: </h4></label>
                             <input type="text" name="spaceConstraints" value={newProblem.spaceConstraints} onChange={handleAddProblemChange} />
-                            <label>Input Format: </label>
+                            <label><h4>Input Format: </h4></label>
                             <textarea name="inputFormat" value={newProblem.inputFormat} onChange={handleAddProblemChange} />
-                            <label>Output Format: </label>
+                            <label><h4>Output Format: </h4></label>
                             <textarea name="outputFormat" value={newProblem.outputFormat} onChange={handleAddProblemChange} />
 
-                            <h3>Examples</h3>
+                            <h2>Examples</h2>
                             {newProblem.examples.map((example, index) => (
-                                <div key={index} className="example-form-group">
-                                    <label>Example {index + 1} Input: </label>
-                                    <textarea
-                                        name="input"
-                                        value={example.input}
-                                        onChange={(e) => handleAddExampleChange(e, index)}
-                                    />
-                                    <label>Example {index + 1} Output: </label>
-                                    <textarea
-                                        name="output"
-                                        value={example.output}
-                                        onChange={(e) => handleAddExampleChange(e, index)}
-                                    />
-                                    <button type="button" onClick={() => removeExample(index)}>Remove Example</button>
-                                </div>
+                                <div key={index} className="problemlist-example-input">
+                                <label><strong>Example {index+1}</strong></label><br />
+                                <input type="text" name="input" value={example.input} onChange={(e) => handleAddExampleChange(e, index)} placeholder="Example Input" />
+                                <input type="text" name="output" value={example.output} onChange={(e) => handleAddExampleChange(e, index)} placeholder="Example Output" />
+                                <button type="button" className="problemlist-remove-button" onClick={() => removeExample(index)}>Remove Example</button>
+                            </div>
                             ))}
-                            <button type="button" onClick={addExample}>Add Example</button>
+                            <button type="button" className="problemlist-add-button" onClick={addExample}>Add Example</button>
 
-                            <h3>Test Cases</h3>
+                            <h2>Testcases:</h2>
                             {newProblem.testcases.map((testcase, index) => (
-                                <div key={index} className="testcase-form-group">
-                                    <label>Test Case {index + 1} Input: </label>
-                                    <textarea
-                                        name="input"
-                                        value={testcase.input}
-                                        onChange={(e) => handleTestcaseChange(e, index)}
-                                    />
-                                    <label>Test Case {index + 1} Output: </label>
-                                    <textarea
-                                        name="output"
-                                        value={testcase.output}
-                                        onChange={(e) => handleTestcaseChange(e, index)}
-                                    />
-                                    <button type="button" onClick={() => removeTestcase(index)}>Remove Test Case</button>
-                                </div>
+                              <div key={index} className="problemlist-testcase-input">
+                                <label><strong>Testcase {index+1}</strong></label><br />
+                                <input type="text" name="input" value={testcase.input} onChange={(e) => handleTestcaseChange(e, index)} placeholder="Testcase Input" />
+                                <input type="text" name="output" value={testcase.output} onChange={(e) => handleTestcaseChange(e, index)} placeholder="Testcase Output" />
+                                <button type="button" className="problemlist-remove-button" onClick={() => removeTestcase(index)}>Remove Test Case</button>
+                              </div>
                             ))}
-                            <button type="button" onClick={addTestcase}>Add Test Case</button>
-
-                            <button type="submit">Add Problem</button>
-                            <button type="button" onClick={() => setIsAddProblem(false)}>Cancel</button>
+                            <button type="button" className="problemlist-add-button" onClick={addTestcase}>Add Testcase</button>
+                            <br /> <br />
+                            <label><h4>Score: </h4></label>
+                            <input type="number" name="score" value={newProblem.score} onChange={handleAddProblemChange} />                 
+                            
+                            <div className="problemlist-button-group">
+                                <button type="submit" className="problemlist-submit-button">Add Problem</button>
+                                <button type="button" className="problemlist-close-button" onClick={() => setIsAddProblem(false)}>Cancel</button>
+                            </div>
                         </form>
                     </div>
                 </div>
-            )}
-            </>):(
-                <div>Loading...</div>
             )}
         </div>
     );

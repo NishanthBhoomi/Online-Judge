@@ -1,0 +1,88 @@
+.submissions-container {
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 1400px;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submissions-container h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.submissions-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.submissions-table tbody tr.accepted {
+    background-color: #d1ffbd;
+}
+
+.submissions-table tbody tr.not-accepted {
+    background-color: #fdbbbb;  
+}
+
+.language-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.submissions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin: 20px 0;
+    font-size: 1.2em;
+    font-family: 'Arial', sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.submissions-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.submissions-table th,
+.submissions-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    font-family: 'Ubuntu', sans-serif;
+    text-align: left;
+    color: black;
+}
+
+.submissions-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    font-size: 0.875em;
+}
+
+.submissions-table th {
+    background-color: #ffd700;
+}
+
+.submissions-table button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submissions-table button:hover {
+    background-color: #c82333;
+}
+
+.loading,
+.error {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+}

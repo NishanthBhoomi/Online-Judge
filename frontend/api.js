@@ -1,13 +1,12 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://backend.codingjudge.online', // your backend URL
-  withCredentials: true, // allow cookies to be sent with each request
+  baseURL: 'https://backend.codingjudge.online', 
+  withCredentials: true,
 });
 
 api.interceptors.request.use(
   (config) => {
-    // No need to manually add the Authorization header, cookies will be sent automatically
     return config;
   },
   (error) => {
@@ -18,8 +17,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response.status === 401) {
-      // Handle unauthorized error, e.g., redirect to login
+    if (error.response.status === 401 && window.location.pathname!=='/login' && window.location.pathname!=='/register' && window.location.pathname!=='/') {
+      alert('Unauthorized, logging out...');
+      window.location.href='/login';    
       console.log("Unauthorized, logging out...");
     }
     return Promise.reject(error);

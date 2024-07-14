@@ -62,7 +62,7 @@ app.post("/run", async (req, res) => {
     } else if (language == "py") {
       output = await executePython(filePath, input,3*Time,Space);
     } else {
-      return res.status(401).json({
+      return res.status(400).json({
         message: "Unsupported Language ",
         success: false,
       });
@@ -214,6 +214,7 @@ app.post("/submit", async (req, res) => {
       res.status(200).json({
           results,
           type:finalstatus,
+          index: i,
           input: testcases[i].input,
           answer: testcases[i].output,
           output: results[i].output,

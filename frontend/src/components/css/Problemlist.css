@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap');
 
 .problemlist-container {
-    max-width: 100%;
+    max-width: 1200px; /* Fixed width for better layout */
     margin: 0 auto;
     padding: 20px;
-    font-family: 'Roboto', sans-serif; /* Updated font-family */
+    font-family: 'Roboto', sans-serif;
 }
 
 .problemlist-header {
@@ -12,17 +12,16 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 0;
-    border-bottom: 2px solid #ddd; /* Added border-bottom for visual separation */
+    border-bottom: 2px solid #ddd;
 }
 
 .problemlist-header h1 {
-    font-family: 'Arial', sans-serif; /* Updated to Montserrat for the heading */
+    font-family: 'Montserrat', sans-serif;
     text-align: center;
     flex: 1;
-    color: #333; /* Dark grey color for the heading */
-    font-size: 1.5rem; /* Increased font size */
+    color: black;
+    font-size: 2rem;
     font-weight: 700;
-    font-size: 35px;
 }
 
 .problemlist-header .problemlist-buttons {
@@ -30,89 +29,97 @@
     gap: 10px;
 }
 
-.problemlist-header .problemlist-buttons button {
-    padding: 10px 20px;
+.problemlist-add-problem-button, .problemlist-submission-button {
+    padding: 12px 24px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    color: #fff;
     font-weight: bold;
-    font-size: 0.875rem; /* Added font-size */
-    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-/* Profile Button */
-.problemlist-header .problemlist-buttons .problemlist-profile-button {
-    background-color: #007bff; /* Blue color */
+.problemlist-add-problem-button {
+    background-color: #28a745;
+    color: #fff;
 }
 
-.problemlist-header .problemlist-buttons .problemlist-profile-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+.problemlist-add-problem-button:hover {
+    background-color: #218838;
 }
 
-/* Submission Button */
-.problemlist-header .problemlist-buttons .problemlist-submission-button {
-    background-color: #05e82b; /* Green color */
+.problemlist-submission-button {
+    background-color: rgb(12, 175, 159);
+    color: #fff;
 }
 
-.problemlist-header .problemlist-buttons .problemlist-submission-button:hover {
-    background-color: #0ba117; /* Darker green on hover */
-}
-
-/* Logout Button */
-.problemlist-header .problemlist-buttons .problemlist-logout-button {
-    background-color: #f0061d; /* Red color */
-}
-
-.problemlist-header .problemlist-buttons .problemlist-logout-button:hover {
-    background-color: #c82333; /* Darker red on hover */
+.problemlist-submission-button:hover {
+    background-color: #117a8b;
 }
 
 .problemlist-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added box-shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow for the table */
 }
 
 .problemlist-table th, .problemlist-table td {
-    padding: 12px; /* Increased padding */
+    padding: 14px; /* Increased padding */
     border: 1px solid #ddd;
     text-align: left;
+    font-family: 'Ubuntu', sans-serif;
+
 }
 
 .problemlist-table th {
-    background-color: #f4f4f4;
-    color: #333; /* Dark grey for the table header text */
-    font-weight: 700; /* Bold text for table headers */
+    background-color: #ffd700; /* Blue color for table header */
+    color: #123; /* White text for better contrast */
+    font-weight: 700;
 }
 
 .problemlist-table tr:nth-child(even) {
-    background-color: #f9f9f9; /* Alternating row colors */
+    background-color: #f4f4f4; /* Slightly darker background for even rows */
 }
+
 
 .problemlist-table tr:hover {
-    background-color: #e2e6ea; /* Highlight row on hover */
+    background-color: #e0e0e0; /* Subtle highlight on row hover */
 }
 
-/* Edit Button */
-.problemlist-table .problemlist-buttons .problemlist-edit-button {
-    background-color: #28a745; /* Green color */
+.problemlist-action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.problemlist-edit-button, .problemlist-delete-button {
+    padding-right: 1px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
     color: #fff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.problemlist-table .problemlist-buttons .problemlist-edit-button:hover {
-    background-color: #218838; /* Darker green on hover */
+.problemlist-edit-button {
+    background-color: #ff8c00; /* Green color for Edit */
 }
 
-/* Delete Button */
-.problemlist-table .problemlist-buttons .problemlist-delete-button {
-    background-color: #ffa600; /* Yellow color */
-    color: #fff;
+.problemlist-edit-button:hover {
+    background-color: #ff6400;
+    border-color: rgb(255, 100, 0); /* Border color on hover */
 }
 
-.problemlist-table .problemlist-buttons .problemlist-delete-button:hover {
-    background-color: #f6ba05; /* Darker yellow on hover */
+.problemlist-delete-button {
+    background-color: red; /* Red color for Delete */
+}
+
+.problemlist-delete-button:hover {
+    background-color: #c82333;
+    border-color: #c82333; /* Border color on hover */
 }
 
 /* Modal Styles */
@@ -160,26 +167,44 @@
 }
 
 /* Delete Modal Styles */
+.problemlist-yes-button, .problemlist-no-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.problemlist-yes-button {
+    background-color: #19c03f; 
+}
+
+.problemlist-yes-button:hover {
+    background-color: #218838; 
+}
+
+.problemlist-no-button {
+    background-color: #5a6268; 
+}
+
+.problemlist-no-button:hover {
+    background-color: #525960; 
+}
+
 .problemlist-modal-content .problemlist-button-group {
     display: flex;
     justify-content: center;
-    gap: 15px; /* Increased gap */
+    gap: 10px; 
+    margin-top: 20px;
 }
 
-.problemlist-modal-content .problemlist-button-group .problemlist-yes-button {
-    background-color: #dc3545; /* Red color for Yes button */
-}
-
-.problemlist-modal-content .problemlist-button-group .problemlist-yes-button:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
-
-.problemlist-modal-content .problemlist-button-group .problemlist-no-button {
-    background-color: #007bff; /* Blue color for No button */
-}
-
-.problemlist-modal-content .problemlist-button-group .problemlist-no-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+.problemlist-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Add Problem Button Styles */
@@ -212,7 +237,7 @@
 }
 
 .problemlist-add-form input, .problemlist-add-form textarea, .problemlist-add-form select,.problemlist-edit-form input, .problemlist-add-form textarea, .problemlist-add-form select {
-    width: 100%;
+    width: 97.5%;
     padding: 10px; /* Increased padding */
     margin-bottom: 12px; /* Adjusted margin */
     border: 1px solid #ddd;
@@ -251,10 +276,12 @@
 
 /* Remove Buttons */
 .problemlist-example-input .problemlist-remove-button, .problemlist-testcase-input .problemlist-remove-button {
-    background-color: #dc3545; /* Red color for Remove buttons */
+    background-color: #f6021a; /* Red color for Remove buttons */
     color: #fff;
     border: none;
-    padding: 6px 12px; /* Adjusted padding */
+    gap: 10px;
+    font-size: 0.875rem; /* Font size */
+    margin-bottom: 12px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -271,7 +298,7 @@
 }
 
 .problemlist-add-form .problemlist-button-group .problemlist-submit-button,.problemlist-edit-form .problemlist-button-group .problemlist-submit-button {
-    background-color: #28a745; /* Green color for Submit button */
+    background-color: #19c03f; /* Green color for Submit button */
     color: #fff;
     padding: 12px 24px; /* Increased padding */
     border: none;
@@ -287,7 +314,7 @@
 }
 
 .problemlist-add-form .problemlist-button-group .problemlist-close-button,.problemlist-edit-form .problemlist-button-group .problemlist-close-button  {
-    background-color: #6c757d; /* Gray color for Close button */
+    background-color: #5a6268; /* Gray color for Close button */
     color: #fff;
     padding: 12px 24px; /* Increased padding */
     border: none;
@@ -299,5 +326,5 @@
 }
 
 .problemlist-add-form .problemlist-button-group .problemlist-close-button:hover,.problemlist-edit-form .problemlist-button-group .problemlist-close-button:hover {
-    background-color: #5a6268; /* Darker gray on hover */
+    background-color: #525960; /* Darker gray on hover */
 }

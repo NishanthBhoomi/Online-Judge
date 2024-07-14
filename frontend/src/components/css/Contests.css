@@ -1,58 +1,98 @@
 .contests-container {
+    max-width: 1200px; /* Fixed width for better layout */
+    margin: 0 auto;
     padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    min-height: 100vh;
 }
 
 .contests-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    padding: 20px 0;
+    border-bottom: 2px solid #ddd;
+    color: white;
+    border-radius: 8px;
+}
+
+.contests-header h1 {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    color: black;
+    font-size: 2rem;
+    font-weight: 700;
+    flex: 1;
+    position: relative;
 }
 
 .contests-add-contest-button {
-    background-color: #4CAF50; /* Green */
+    background-color: #ffd700;
+    margin-right: auto; /* Push button to the left */
     color: white;
     border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    padding: 12px 24px;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-.contests-submission-button,
-.contests-profile-button,
-.contests-logout-button {
-    background-color: #008CBA; /* Blue */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 0 5px;
-    cursor: pointer;
+.contests-add-contest-button:hover {
+    background-color: #efcc02;
 }
 
 .contests-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow for the table */
 }
 
 .contests-table th, .contests-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    padding: 14px; 
+    border: 1px solid #eae9e9;
+    text-align: left;
+    font-family: 'Ubuntu', sans-serif;
 }
 
+
 .contests-table th {
-    background-color: #f2f2f2;
+    background-color: #4CAF50; /* Matches the navigation bar */
+    color: white; /* White text for better contrast */
+    font-weight: 700;
+}
+
+.contests-table tr:nth-child(even) {
+    background-color: #f4f4f4; /* Slightly darker background for even rows */
+}
+
+.contests-table tr:hover {
+    background-color: #e0e0e0; /* Subtle highlight on row hover */
+}
+
+.contests-delete-button {
+    background-color: #ff3838; /* Red color for Delete */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+
+.contests-delete-button:hover {
+    background-color: #e60000;
 }
 
 .contests-modal {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
@@ -60,77 +100,82 @@
 }
 
 .contests-modal-content {
-    background: #fff;
+    background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    max-width: 500px;
+    text-align: center;
+    max-width: 400px;
     width: 100%;
 }
 
-.contests-edit-form,
-.contests-add-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.contests-edit-form label,
-.contests-add-form label {
-    margin-bottom: 5px;
-}
-
-.contests-edit-form input,
-.contests-add-form input,
-.contests-edit-form textarea,
-.contests-add-form textarea {
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.contests-modal-content h2 {
+    margin-bottom: 15px;
 }
 
 .contests-button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 10px;
 }
 
-.contests-submit-button {
-    background-color: #4CAF50; /* Green */
-    color: white;
+.contests-yes-button,
+.contests-no-button {
+    padding: 10px 20px;
     border: none;
-    padding: 10px 15px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.contests-close-button {
-    background-color: #f44336; /* Red */
+.contests-yes-button {
+    background-color: #4CAF50;
     color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
 }
 
-.contests-remove-button {
-    background-color: #f44336; /* Red */
+.contests-yes-button:hover {
+    background-color: #45a049;
+}
+
+.contests-no-button {
+    background-color: #f44336;
     color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
 }
 
-.contests-add-button {
-    background-color: #4CAF50; /* Green */
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
+.contests-no-button:hover {
+    background-color: #e53935;
 }
 
-.contests-problem-input {
-    display: flex;
-    align-items: center;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contests-container {
+        padding: 10px;
+    }
 
-.contests-problem-input input {
-    margin-right: 10px;
+    .contests-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .contests-add-contest-container {
+        margin-top: 10px;
+        margin-left: 0; /* Remove margin-left to make button full-width on smaller screens */
+        width: 100%;
+    }
+
+    .contests-add-contest-button {
+        width: 100%;
+    }
+
+    .contests-table {
+        font-size: 14px;
+    }
+
+    .contests-table th, .contests-table td {
+        padding: 10px;
+    }
+
+    .contests-modal-content {
+        width: 90%;
+    }
 }

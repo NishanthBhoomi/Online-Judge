@@ -71,23 +71,23 @@ const Contests = () => {
     return (
         <div className="contests-container">
             <header className="contests-header">
+                <h1>Contests</h1>
                 {user && user.isAdmin && (
                     <div className="contests-add-contest-container">
                         <button className="contests-add-contest-button" onClick={() => navigate('/contest')}>Add Contest</button>
                     </div>
                 )}
-                <h1>Contests</h1>
             </header>
             <table className="contests-table">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Start Time</th>
+                        <th><strong>#</strong></th>
+                        <th><strong>Title</strong></th>
+                        <th><strong>Description</strong></th>
+                        <th><strong>Start Time</strong></th>
                         <th>End Time</th>
                         {user && user.isAdmin && (
-                            <th>Action</th>
+                            <th><strong>Action</strong></th>
                         )}
                     </tr>
                 </thead>
@@ -95,7 +95,7 @@ const Contests = () => {
                     {contests.map((contest, index) => (
                         <tr key={contest._id} onClick={() => handleContestClick(contest._id)} style={{ cursor: "pointer" }}>
                             <td>{index + 1}</td>
-                            <td>{contest.title}</td>
+                            <td><strong>{contest.title}</strong></td>
                             <td>{contest.description}</td>
                             <td>{formatDate(contest.startTime)}</td>
                             <td>{formatDate(contest.endTime)}</td>

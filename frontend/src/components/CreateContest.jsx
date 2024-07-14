@@ -1,11 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../api';
 import { useNavigate } from "react-router-dom";
 import './css/CreateContest.css';
-import { Context } from "../UserProvider";
 
 const CreateContest = () => {
-    const { user, fetchUser } = useContext(Context);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -23,6 +21,7 @@ const CreateContest = () => {
         outputFormat: '',
         examples: [{ input: '', output: '' }],
         testcases: [{ input: '', output: '' }],
+        score: 0
     });
     const [isAddProblem, setIsAddProblem] = useState(false);
 
@@ -42,23 +41,52 @@ const CreateContest = () => {
     };
 
     const handleProblemChange = (e) => {
-        const value = e.target.value;
-        setSelectedProblems((prev) => {
-            if (prev.includes(value)) {
-                return prev.filter((id) => id !== value);
-            } else {
-                return [...prev, value];
-            }
-        });
+        const problemId = e.target.value;
+        const isChecked = e.target.checked;
+
+        if (isChecked) {
+            setSelectedProblems((prev) => [
+                ...prev,
+                { problem: problemId, score: 0 } 
+            ]);
+        } else {
+            setSelectedProblems((prev) =>
+                prev.filter((problem) => problem.problem !== problemId)
+            );
+        }
     };
+
+    const handleScoreChange = (e, problemId) => {
+        const newScore = parseInt(e.target.value, 10);
+        setSelectedProblems((prev) =>
+            prev.map((problem) =>
+                problem.problem === problemId ? { ...problem, score: newScore } : problem
+            )
+        );
+    };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const validProblems = selectedProblems.filter(p => p.score > 0);
+
+        if (validProblems.length === 0) {
+            alert('Please add at least one problem with a valid score.');
+            return;
+        }
+
         try {
-            await api.post('/contest', { title, description, startTime, endTime, problems: selectedProblems });
+            console.log("valid problems",validProblems);
+            await api.post('/contest', {
+                title,
+                description,
+                startTime,
+                endTime,
+                problems: validProblems
+            });
             navigate('/contests');
         } catch (error) {
-            console.error('Error creating contest:', error);
+            console.error('Error creating contest:', error.response?.data?.message || error.message);
         }
     };
 
@@ -66,7 +94,7 @@ const CreateContest = () => {
         const { name, value } = e.target;
         setNewProblem((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: name==='score'? Number(value):value,
         }));
     };
 
@@ -134,6 +162,7 @@ const CreateContest = () => {
                 outputFormat: '',
                 examples: [{ input: '', output: '' }],
                 testcases: [{ input: '', output: '' }],
+                score: 0
             });
             setIsAddProblem(false);
         } catch (error) {
@@ -164,6 +193,7 @@ const CreateContest = () => {
             <header className="createcontest-header">
                 <h1>Create Contest</h1>
             </header>
+            <br />
             <form onSubmit={handleSubmit} className="createcontest-form">
                 <div>
                     <label htmlFor="title">Title:</label>
@@ -186,15 +216,24 @@ const CreateContest = () => {
                     <label>Problems:</label>
                     <div className="problems-list">
                         {problems.map((problem) => (
-                            <div key={problem._id}>
+                            <div key={problem._id} className="problem-item">
                                 <label>
                                     <input
                                         type="checkbox"
                                         value={problem._id}
+                                        data-score={problem.score}
                                         onChange={handleProblemChange}
                                     />
                                     {problem.title}
                                 </label>
+                                {selectedProblems.some(p => p.problem === problem._id) && (
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        placeholder="Score"
+                                        onChange={(e) => handleScoreChange(e, problem._id)}
+                                    />
+                                )}
                             </div>
                         ))}
                     </div>
@@ -204,52 +243,55 @@ const CreateContest = () => {
             </form>
             
             {isAddProblem && (
-                <div className="createcontest-modal">
-                    <div className="createcontest-modal-content">
+                <div className="problemlist-modal">
+                    <div className="problemlist-modal-content">
                         <h2>Add New Problem</h2>
-                        <form onSubmit={handleAddProblemSubmit}>
-                            <label>Title:</label>
+                        <form className='problemlist-add-form' onSubmit={handleAddProblemSubmit}>
+                            <label><h4>Title:</h4></label>
                             <input type="text" name="title" value={newProblem.title} onChange={handleAddProblemChange} placeholder="Problem Title" required/>
-                            <label>Description:</label>
+                            <label><h4>Description:</h4></label>
                             <textarea name="description" value={newProblem.description} onChange={handleAddProblemChange} placeholder="Problem Description" required />
-                            <label>Difficulty:</label>
+                            <label><h4>Difficulty:</h4></label>
                             <select name="difficulty" value={newProblem.difficulty} onChange={handleAddProblemChange} required >
                                 <option value="easy">Easy</option>
                                 <option value="medium">Medium</option>
                                 <option value="hard">Hard</option>
                             </select>
-                            <label>Constraints:</label>
+                            <label><h4>Constraints:</h4></label>
                             <textarea name="constraints" value={newProblem.constraints} onChange={handleAddProblemChange} placeholder="Constraints" required />
-                            <label>Time Constraints:</label>
+                            <label><h4>Time Constraints:</h4></label>
                             <input type="text" name="timeConstraints" value={newProblem.timeConstraints} onChange={handleAddProblemChange} placeholder="Time Constraints" required/>
-                            <label>Space Constraints:</label>
+                            <label><h4>Space Constraints:</h4></label>
                             <input type="text" name="spaceConstraints" value={newProblem.spaceConstraints} onChange={handleAddProblemChange} placeholder="Space Constraints" required/>
-                            <label>Input Format:</label>
+                            <label><h4>Input Format:</h4></label>
                             <textarea name="inputFormat" value={newProblem.inputFormat} onChange={handleAddProblemChange} placeholder="Input Format" required />
-                            <label>Output Format:</label>
+                            <label><h4>Output Format:</h4></label>
                             <input type="text" name="outputFormat" value={newProblem.outputFormat} onChange={handleAddProblemChange} placeholder="Output Format" required/>
                             <h2>Examples:</h2>
                             {newProblem.examples.map((example, index) => (
-                                <div key={index} className="createcontest-example-input">
-                                    <label>Example {index + 1}</label><br />
+                                <div key={index} className="problemlist-example-input">
+                                    <label><strong>Example {index + 1}</strong></label><br />
                                     <input type="text" name="input" value={example.input} onChange={(e) => handleExampleChange(e, index)} placeholder="Example Input" />
                                     <input type="text" name="output" value={example.output} onChange={(e) => handleExampleChange(e, index)} placeholder="Example Output" />
-                                    <button type="button" onClick={() => removeExample(index)}>Remove Example</button>
+                                    <button type="button" className='problemlist-remove-button' onClick={() => removeExample(index)}>Remove Example</button>
                                 </div>
                             ))}
-                            <button type="button" onClick={addExample}>Add Example</button>
+                            <button type="button" className='problemlist-add-button' onClick={addExample}>Add Example</button>
                             <h2>Test Cases:</h2>
                             {newProblem.testcases.map((testcase, index) => (
-                                <div key={index} className="createcontest-testcase-input">
-                                    <label>Test Case {index + 1}</label><br />
+                                <div key={index} className="problemlist-testcase-input">
+                                    <label><strong>Test Case {index + 1}</strong></label><br />
                                     <input type="text" name="input" value={testcase.input} onChange={(e) => handleTestcaseChange(e, index)} placeholder="Test Case Input" />
                                     <input type="text" name="output" value={testcase.output} onChange={(e) => handleTestcaseChange(e, index)} placeholder="Test Case Output" />
-                                    <button type="button" onClick={() => removeTestcase(index)}>Remove Test Case</button>
+                                    <button type="button" className='problemlist-remove-button' onClick={() => removeTestcase(index)}>Remove Test Case</button>
                                 </div>
                             ))}
-                            <button type="button" onClick={addTestcase}>Add Test Case</button>
-                            <button type="submit">Add Problem</button>
-                            <button type="button" onClick={() => setIsAddProblem(false)}>Cancel</button>
+                            <button type="button" className='problemlist-add-button' onClick={addTestcase}>Add Test Case</button>
+                            
+                            <div className="problemlist-button-group">
+                                <button type="submit" className="problemlist-submit-button">Submit</button>
+                                <button type="button" className="problemlist-close-button" onClick={() => setIsAddProblem(false)}>Close</button>
+                            </div>
                         </form>
                     </div>
                 </div>

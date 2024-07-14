@@ -7,19 +7,13 @@ function UserProvider({ children }) {
 
   const fetchUser = async () => {
       try {
-        
         const response = await api.get('/profile');
         console.log('User response:', response.data);
-        if (response.data.UserType === 'Admin') {
-          setUser(response.data.user);
-        } else {
-          setUser(response.data.user);
-        }
+        setUser(response.data.user);
       } catch (error) {
         console.error('Failed to fetch current user:', error);
         setUser(null);
       }
-    
   };
 
   useEffect(() => {
@@ -27,7 +21,7 @@ function UserProvider({ children }) {
   }, []);
 
   return (
-    <Context.Provider value={{ user, fetchUser }}>
+    <Context.Provider value={{ user,setUser, fetchUser }}>
       {children}
     </Context.Provider>
   );

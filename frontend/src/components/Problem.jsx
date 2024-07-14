@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams ,Link} from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import api from '../../api';
 
 import Editor from 'react-simple-code-editor';
@@ -7,6 +7,7 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
+import './css/Problem.css'; 
 
 const Problem = () => {
     const { id } = useParams();
@@ -26,6 +27,9 @@ int main() {
 }`);
     const [Language, setLanguage] = useState('cpp');
     const [input, setInput] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { contestId } = location.state || {};
 
     useEffect(() => {
         const fetchProblem = async () => {
@@ -46,6 +50,7 @@ int main() {
     };
 
     const handleRunCode = async () => {
+        setOutput('');
         const payload = {
             problemId: id,
             language: Language,
@@ -54,27 +59,24 @@ int main() {
         };
 
         try {
-            const response = await api.post('/run',payload);
+            const response = await api.post('/run', payload);
             const data = response.data;
-            console.log("Data is ", data);
-            if(data.output){
-                 setOutput(data.output);
-                 console.log("Output is ", data.output);
+            if (data.output) {
+                setOutput(data.output);
             }
         } catch (error) {
-            if(error.response.data && error.response.data.type){
-                if(error.response.data.type === 'compilation'){
+            if (error.response.data && error.response.data.type) {
+                if (error.response.data.type === 'compilation') {
                     setOutput(error.response.data.error_message);
-                }else if(error.response.data.type === 'runtime'){
+                } else if (error.response.data.type === 'runtime') {
                     setOutput("Runtime Error");
-                }else if(error.response.data.type==='time'){
+                } else if (error.response.data.type === 'time') {
                     setOutput("Time Limit Exceeded");
-                }else if(error.response.data.type==='memory'){
+                } else if (error.response.data.type === 'memory') {
                     setOutput("Memory Limit Exceeded");
                 }
-            }
-            else{
-                const errorMessage = error.response && error.response.data && error.response.data.message? error.response.data.message: "An unknown error occurred";
+            } else {
+                const errorMessage = error.response && error.response.data && error.response.data.message ? error.response.data.message : "An unknown error occurred";
                 setOutput(errorMessage);
                 console.log("Not working ", error);
             }
@@ -86,14 +88,15 @@ int main() {
             problemId: id,
             language: Language,
             code,
+            contestId
         };
 
         try {
             const response = await api.post('/submit', payload);
             const data = response.data;
-            if(data.type){
+            if (data.type) {
                 setOutput(data.type);
-                console.log("Final status is ", data.type);  
+                console.log("Final status is ", data.type);
                 if (data.type == "Wrong Answer") {
                     console.log(`Output is:\n${data.output}`);
                     const errorMessage = `Wrong Answer\ninput:\n${data.input}\n\nexpected output:\n${data.answer}\n\nYour code's output:\n${data.output}`;
@@ -102,19 +105,18 @@ int main() {
             }
         } catch (error) {
             console.log("Error is ", error);
-            if(error.response.data && error.response.data.type){
-                if(error.response.data.type === 'compilation'){
+            if (error.response.data && error.response.data.type) {
+                if (error.response.data.type === 'compilation') {
                     setOutput(error.response.data.error_message);
-                }else if(error.response.data.type === 'runtime'){
+                } else if (error.response.data.type === 'runtime') {
                     setOutput("Runtime Error");
-                }else if(error.response.data.type==='time'){
+                } else if (error.response.data.type === 'time') {
                     setOutput("Time Limit Exceeded");
-                }else if(error.response.data.type==='memory'){
+                } else if (error.response.data.type === 'memory') {
                     setOutput("Memory Limit Exceeded");
                 }
-            }
-            else{
-                const errorMessage = error.response && error.response.data && error.response.data.message? error.response.data.message: "An unknown error occurred";
+            } else {
+                const errorMessage = error.response && error.response.data && error.response.data.message ? error.response.data.message : "An unknown error occurred";
                 setOutput(errorMessage);
                 console.log("Submission Error ", error);
             }
@@ -130,23 +132,26 @@ int main() {
     }
 
     return (
-        <div style={{ position: 'relative', height: '100vh', padding: '20px' }}>
-            <Link to={`/submissions/${problem._id}`} style={{ position: 'absolute', top: '20px', right: '20px' }}>
-                <button style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+        <div className="problem-container">
+            <div className="problem-header">
+                <button className="view-submissions-button"
+                    onClick={() => navigate(`/submissions/${problem._id}`)}
+                >
                     View Submissions
                 </button>
-            </Link>
-            <div style={{ display: 'flex', height: 'calc(100% - 50px)', padding: '20px' }}>
-                <div style={{ flex: 1, overflowY: 'auto' }}>
-                    <h1>{problem.title}</h1>
-                    <h2>Description: </h2> <p>{problem.description}</p>
+            </div>
+            <div className="problem-content">
+                <div className="problem-details">
+                    <h1 className="problem-title">{problem.title}</h1>
+                    <h2>Description:</h2>
+                    <p className="problem-description">{problem.description}</p>
                     <p><strong>Difficulty:</strong> {problem.difficulty}</p>
                     <p><strong>Constraints:</strong> {problem.constraints}</p>
                     <p><strong>Time Constraints:</strong> {problem.timeConstraints}</p>
                     <p><strong>Space Constraints:</strong> {problem.spaceConstraints}</p>
                     <p><strong>Input Format:</strong> {problem.inputFormat}</p>
                     <p><strong>Output Format:</strong> {problem.outputFormat}</p>
-                    <h2>Examples :</h2>
+                    <h2>Examples:</h2>
                     <ul>
                         {problem.examples.map((example, index) => (
                             <li key={index}>
@@ -156,21 +161,20 @@ int main() {
                         ))}
                     </ul>
                 </div>
-                <div style={{ width: '600px', height: '100%', display: 'flex', flexDirection: 'column', marginLeft: '20px' }}>
+                <div className="problem-editor">
                     <h2>Code Editor</h2>
                     <select
                         value={Language}
                         onChange={(e) => setLanguage(e.target.value)}
-                        className="select-box border border-gray-300 rounded-lg py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500"
+                        className="select-box"
                     >
                         <option value='cpp'>C++</option>
                         <option value='c'>C</option>
                         <option value='py'>Python</option>
                         <option value='java'>Java</option>
                     </select>
-                    <br />
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                        <div style={{ flex: 1, overflow: 'auto' }}>
+                    <div className="editor-container">
+                        <div className="editor">
                             <Editor
                                 value={code}
                                 onValueChange={handleCodeChange}
@@ -178,7 +182,7 @@ int main() {
                                 padding={10}
                                 style={{
                                     fontFamily: '"Fira code", "Fira Mono", monospace',
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     border: '1px solid #ddd',
                                     borderRadius: '5px',
                                     minHeight: '460px',
@@ -189,42 +193,20 @@ int main() {
                             />
                         </div>
                     </div>
-                    <div style={{ display: 'flex', height: '100px', marginTop: '10px' }}>
+                    <div className="input-output-container">
                         <textarea
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Enter input here..."
-                            style={{
-                                flex: 1,
-                                fontFamily: '"Fira code", "Fira Mono", monospace',
-                                fontSize: 12,
-                                border: '1px solid #ddd',
-                                borderRadius: '5px',
-                                marginRight: '10px',
-                                overflowY: 'auto',
-                                height: '115px'
-                            }}
+                            className="input-area"
                         />
-                        <div
-                            className="outputbox"
-                            style={{
-                                flex: 1,
-                                fontFamily: '"Fira code", "Fira Mono", monospace',
-                                fontSize: 12,
-                                border: '1px solid #ddd',
-                                borderRadius: '5px',
-                                padding: '10px',
-                                backgroundColor: '#f9f9f9',
-                                whiteSpace: 'pre-wrap',
-                                overflowY: 'auto',
-                                height: '100px'
-                            }}>
+                        <div className={`output-box ${output && output.includes('Accepted') ? 'output-success' : (output.includes('Limit Exceeded') || output.includes('Error'))? 'output-error' : ''}`}>
                             {output}
                         </div>
                     </div>
-                    <div style={{ display: 'flex', marginTop: '30px', gap: '10px' }}>
-                        <button onClick={handleRunCode} style={{ flex: 1 }}>Run</button>
-                        <button onClick={handleSubmitCode} style={{ flex: 1 }}>Submit</button>
+                    <div className="action-buttons">
+                        <button onClick={handleRunCode} className="run-button">Run</button>
+                        <button onClick={handleSubmitCode} className="submit-button">Submit</button>
                     </div>
                 </div>
             </div>
@@ -232,4 +214,4 @@ int main() {
     );
 };
 
-export default Problem;    
+export default Problem;

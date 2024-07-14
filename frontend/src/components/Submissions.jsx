@@ -1,22 +1,48 @@
-import {useState, useEffect, useContext} from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Modal from './CodeModal';
 import api from '../../api';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { coy as codeStyle } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { format } from 'date-fns';
+import './css/Submissions.css';
 
-const Submissions = () => {
+import cppImage from '../../assets/c++.jpg';
+import javaImage from '../../assets/java.jpg';
+import pythonImage from '../../assets/python.jpg';
+import cImage from '../../assets/C.jpeg';
+
+const languageSymbols = {
+    cpp: cppImage,
+    py: pythonImage,
+    java: javaImage,
+    c: cImage
+};
+const verdictColors = {
+    'Accepted': '#00ff00',
+    'Wrong Answer': 'red',
+    'Runtime Error': 'red',
+    'Time Limit Exceeded': 'red',
+    'Memory Limit Exceeded': 'red'
+};
+
+const Submissions = ({ apiEndpoint, title }) => {
     const [submissions, setSubmissions] = useState([]);
-    const [Loading, setLoading]=useState(true);
-    const [error, setError]=useState(null); 
-    const [open, setOpen]=useState(false);
-    const [code, setCode]=useState('');
-    const [language, setLanguage]=useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [code, setCode] = useState('');
+    const [language, setLanguage] = useState('');
 
-    useEffect(()=>{
+    const { problemId, contestId, userId } = useParams();
+
+    useEffect(() => {
         const fetchSubmissions = async () => {
             try {
-                const response = await api.get(`/submissions`);
+                const endpoint = apiEndpoint
+                    .replace(':problemId', problemId || '')
+                    .replace(':contestId', contestId || '')
+                    .replace(':userId', userId || '');
+
+                const response = await api.get(endpoint);
                 setSubmissions(response.data);
                 setLoading(false);
             } catch (error) {
@@ -26,72 +52,65 @@ const Submissions = () => {
             }
         };
         fetchSubmissions();
-    },[]);
+    }, [apiEndpoint, problemId, contestId, userId]);
 
-    if(Loading){
-        return <div>Loading...</div>;
+    if (loading) {
+        return <div className="loading">Loading...</div>;
     }
 
-    if(error){
-        return <div>Error: {error.message}</div>;
+    if (error) {
+        return <div className="error">Error: {error.message}</div>;
     }
 
-    const openModal=(code,language)=>{
+    const openModal = (code, language) => {
         setLanguage(language);
         setCode(code);
         setOpen(true);
     };
 
-    const closeModal=()=>{
+    const closeModal = () => {
         setOpen(false);
         setLanguage('');
         setCode('');
     };
 
-    return(
-        <div>
-            <h1>Total Submissions</h1>
-            <table>
+    return (
+        <div className="submissions-container">
+            <h1>{title}</h1>
+            <table className="submissions-table">
                 <thead>
                     <tr>
                         <th>Problem</th>
                         <th>Language</th>
+                        <th>User</th>
+                        <th>Email</th>
                         <th>Verdict</th>
                         <th>Submitted At</th>
                         <th>Code</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {submissions.map((submission)=>(
-                        <tr key={submission._id}>
-                            <td>{submission.problem?.title || 'No Problem Title'}</td> 
-                            <td>{submission.language=='cpp'?'C++':submission.language==='py'?'Python':'Java'}</td>
-                            <td>{submission.result}</td>
+                    {submissions.map((submission) => (
+                        <tr key={submission._id} className={submission.result === 'Accepted' ? 'accepted' : 'not-accepted'}>
+                            <td>{submission.problem?.title || 'No Problem Title'}</td>
+                            <td>
+                                {languageSymbols[submission.language] 
+                                    ? <img src={languageSymbols[submission.language]} alt={submission.language} className="language-icon" />
+                                    : submission.language}
+                            </td>                            <td>{submission.user.firstname}</td>
+                            <td>{submission.user.email}</td>
+                            <td style={{ color: verdictColors[submission.result] || 'black' }}><strong>{submission.result}</strong></td>
                             <td>{format(new Date(submission.timestamp), 'PPpp')}</td>
-                            <td><button onClick={()=>openModal(submission.code,submission.langugage)}>&lt;/&gt;</button></td>
+                            <td>
+                                <button className="code-button" onClick={() => openModal(submission.code, submission.language)}>
+                                    &lt;/&gt;
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <Modal isOpen={open} onClose={closeModal} code={code} language={language}
-                style={{
-                content: {
-                    top: '50%',
-                    left: '50%',
-                    right: 'auto',
-                    bottom: 'auto',
-                    marginRight: '-50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: '80%',
-                    maxHeight: '80%',
-                },
-            }}>
-                <h2>Code Viewer</h2>
-                <SyntaxHighlighter language={language} style={codeStyle}>
-                    {code}
-                </SyntaxHighlighter>
-                <button onClick={closeModal}>Close</button>
-            </Modal>
+            <Modal isOpen={open} onClose={closeModal} code={code} language={language} />
         </div>
     );
 };

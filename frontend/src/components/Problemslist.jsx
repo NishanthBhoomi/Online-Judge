@@ -59,16 +59,20 @@ const Problemslist = () => {
         navigate(`/problem/${id}`);
     };
 
-    const Logout = async () => {
-      try {
-        await api.post('/logout');
-        navigate("/login");
-      } catch (error) {
-        console.log("Error logging out", error);
+    const getDifficultyColor = (difficulty) => {
+      switch(difficulty) {
+        case 'easy':
+          return 'green';
+        case 'medium':
+          return 'orange';
+        case 'hard':
+          return 'red';
+        default:
+          return 'black';
+      
       }
     };
-
-
+  
     const EditClick = (problem) => {
       setSelected(problem);
       setData({title: problem.title, difficulty: problem.difficulty, description: problem.description, constraints: problem.constraints, timeConstraints: problem.timeConstraints, spaceConstraints: problem.spaceConstraints, inputFormat: problem.inputFormat, outputFormat: problem.outputFormat, examples: problem.examples, testcases: problem.testcases});
@@ -207,35 +211,32 @@ const Problemslist = () => {
                   <button className="problemlist-add-problem-button" onClick={() => setIsAdd(true)}>Add Problem</button>
               </div>
               )}
-              <button className="problemlist-contests-button" onClick={() => navigate('/contests')}>Contests</button>
 
               <h1>Problems</h1>
               <div className="problemlist-buttons">
                 <button className="problemlist-submission-button" onClick={()=>navigate("/submissions")}>My Submissions</button>
-                <button className='problemlist-profile-button' onClick={()=>navigate("/profile")}>Profile</button>
-                <button className='problemlist-logout-button' onClick={Logout}>Logout</button>
               </div>
             </header>
             <table className="problemlist-table">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Difficulty</th>
+                        <th><strong>#</strong></th>
+                        <th><strong>Title</strong></th>
+                        <th><strong>Difficulty</strong></th>
                         {user && user.isAdmin && (
-                          <th>Action</th>
+                          <th><strong>Action</strong></th>
                         )}
                     </tr> 
                 </thead>
                 <tbody>
                     {problems.map((problem, index) => (
                         <tr key={problem._id} onClick={() => handleProblemClick(problem._id)} style={{ cursor: "pointer" }}>
-                            <td>{index + 1}</td>
-                            <td>{problem.title}</td>
-                            <td>{problem.difficulty}</td>
+                            <td><strong>{index + 1}</strong></td>
+                            <td ><strong> {problem.title}</strong></td>
+                            <td style={{ color: getDifficultyColor(problem.difficulty) }}><strong>{problem.difficulty}</strong></td>
                             {user && user.UserType === 'Admin' && (
                               <td> 
-                                <div className="problemlist-buttons">
+                                <div className="problemlist-action-buttons">
                                   <button className='problemlist-edit-button' onClick={(e) => {
                                     e.stopPropagation();
                                     EditClick(problem);
@@ -256,38 +257,38 @@ const Problemslist = () => {
                     <div className="problemlist-modal-content">
                         <h1>Edit Problem</h1>
                         <form className='problemlist-edit-form'>
-                            <label>Title: </label>
+                            <label><h4>Title:</h4></label>
                             <input type="text" name="title" value={data.title} onChange={EditChange} placeholder='Title'/> <br />
                             
-                            <label>Description: </label>
+                            <label><h4>Description:</h4></label>
                             <textarea name="description" value={data.description} onChange={EditChange} placeholder='Description'/> <br />
 
-                            <label>Difficulty: </label>
+                            <label><h4>Difficulty:</h4></label>
                             <select name="difficulty" value={data.difficulty} onChange={EditChange}>
                               <option value="easy">easy</option>
                               <option value="medium">medium</option>
                               <option value="hard">hard</option>
                             </select> <br />
                             
-                            <label>Constraints: </label>
+                            <label><h4>Constraints:</h4></label>
                             <textarea name="constraints" value={data.constraints} onChange={EditChange} placeholder='Constraints'/> <br />
-                            <label>Time Constraints: </label>
+                            <label><h4>Time Constraints:</h4></label>
                             <input type="text" name="timeConstraints" value={data.timeConstraints} onChange={EditChange} placeholder='Time Constraints'/> <br />
-                            <label>Space Constraints: </label>
+                            <label><h4>Space Constraints:</h4></label>
                             <input type="text" name="spaceConstraints" value={data.spaceConstraints} onChange={EditChange} placeholder='Space Constraints'/> <br />
                             
-                            <label>Input Format: </label>
+                            <label><h4>Input Format:</h4></label>
                             <textarea name="inputFormat" value={data.inputFormat} onChange={EditChange} placeholder='Input Format'/> <br />
-                            <label>Output Format: </label>
+                            <label><h4>Output Format:</h4></label>
                             <textarea name="outputFormat" value={data.outputFormat} onChange={EditChange} placeholder='Output Format'/> <br />
                             
                             <h2>Examples: </h2>
                             {data.examples.map((example, index) => (
                                 <div key={index} className="problemlist-example-input">
-                                    <label>Example {index+1}</label><br />
+                                    <label><strong>Example {index+1}</strong></label><br />
                                     <input type="text" placeholder="Input" value={example.input} onChange={(e) => ArrayChange(index, 'examples', 'input', e.target.value)}/>
                                     <input type="text" placeholder="Output" value={example.output} onChange={(e) => ArrayChange(index, 'examples', 'output', e.target.value)}/>
-                                    <button type="button" className="problemlist-remove-button" onClick={() => ArrayRemove(index, 'examples')}>Remove</button>
+                                    <button type="button" className="problemlist-remove-button" onClick={() => ArrayRemove(index, 'examples')}>Remove Example</button>
                                 </div>
                             ))}
                             <button type="button" className="problemlist-add-button" onClick={() => ArrayAdd('examples')}>Add Example</button>
@@ -296,10 +297,10 @@ const Problemslist = () => {
                             <h2>Testcases: </h2>
                             {data.testcases.map((testcase, index) => (
                                 <div key={index} className="problemlist-testcase-input">
-                                    <label>Testcase {index+1}</label><br />
+                                    <label><strong>Testcase {index+1}</strong></label><br />
                                     <input type="text" placeholder="Input" value={testcase.input} onChange={(e) => ArrayChange(index, 'testcases', 'input', e.target.value)}/>
                                     <input type="text" placeholder="Output" value={testcase.output} onChange={(e) => ArrayChange(index, 'testcases', 'output', e.target.value)}/>
-                                    <button type="button" className="problemlist-remove-button" onClick={() => ArrayRemove(index, 'testcases')}>Remove</button>
+                                    <button type="button" className="problemlist-remove-button" onClick={() => ArrayRemove(index, 'testcases')}>Remove Test Case</button>
                                 </div>
                             ))}
                             <button type="button" className="problemlist-add-button" onClick={() => ArrayAdd('testcases')}>Add Testcase</button>
@@ -332,41 +333,41 @@ const Problemslist = () => {
                     <div className="problemlist-modal-content">
                         <h1>Add New Problem</h1>
                         <form className="problemlist-add-form" onSubmit={AddSubmit}>
-                            <label>Title:</label>
+                            <label><h4>Title:</h4></label>
                             <input type="text" name="title" value={newProblem.title} onChange={AddProblemChange} placeholder="Problem Title" required />
 
-                            <label>Description:</label>
+                            <label><h4>Description:</h4></label>
                             <textarea name="description" value={newProblem.description} onChange={AddProblemChange} placeholder="Problem Description" required></textarea>
 
-                            <label>Difficulty:</label>
+                            <label><h4>Difficulty:</h4></label>
                             <select name="difficulty" value={newProblem.difficulty} onChange={AddProblemChange} required>
                                 <option value="easy">Easy</option>
                                 <option value="medium">Medium</option>
                                 <option value="hard">Hard</option>
                             </select>
 
-                            <label>Constraints:</label>
+                            <label><h4>Constraints:</h4></label>
                             <textarea name="constraints" value={newProblem.constraints} onChange={AddProblemChange} placeholder="Constraints" required />
 
-                            <label>Time Constraints:</label>
+                            <label><h4>Time Constraints:</h4></label>
                             <input type="text" name="timeConstraints" value={newProblem.timeConstraints} onChange={AddProblemChange} placeholder="Time Constraints" required />
 
-                            <label>Space Constraints:</label>
+                            <label><h4>Space Constraints:</h4></label>
                             <input type="text" name="spaceConstraints" value={newProblem.spaceConstraints} onChange={AddProblemChange} placeholder="Space Constraints" required />
 
-                            <label>Input Format:</label>
+                            <label><h4>Input Format:</h4></label>
                             <textarea name="inputFormat" value={newProblem.inputFormat} onChange={AddProblemChange} placeholder="Input Format" required />
 
-                            <label>Output Format:</label>
+                            <label><h4>Output Format:</h4></label>
                             <input type="text" name="outputFormat" value={newProblem.outputFormat} onChange={AddProblemChange} placeholder="Output Format" required />
 
                             <h2>Examples:</h2>
                             {newProblem.examples.map((example, index) => (
                             <div key={index} className="problemlist-example-input">
-                                <label>Example {index+1}</label><br />
+                                <label><strong>Example {index+1}</strong></label><br />
                                 <input type="text" name="input" value={example.input} onChange={(e) => AddExampleChange(e, index)} placeholder="Example Input" />
                                 <input type="text" name="output" value={example.output} onChange={(e) => AddExampleChange(e, index)} placeholder="Example Output" />
-                                <button type="button" className="problemlist-remove-button" onClick={() => removeExample(index)}>Remove</button>
+                                <button type="button" className="problemlist-remove-button" onClick={() => removeExample(index)}>Remove Example</button>
                             </div>
                             ))}
                             <button type="button" className="problemlist-add-button" onClick={addExample}>Add Example</button>
@@ -374,10 +375,10 @@ const Problemslist = () => {
                             <h2>Testcases:</h2>
                             {newProblem.testcases.map((testcase, index) => (
                               <div key={index} className="problemlist-testcase-input">
-                                <label>Testcase {index+1}</label><br />
+                                <label><strong>Testcase {index+1}</strong></label><br />
                                 <input type="text" name="input" value={testcase.input} onChange={(e) => TestcaseChange(e, index)} placeholder="Testcase Input" />
                                 <input type="text" name="output" value={testcase.output} onChange={(e) => TestcaseChange(e, index)} placeholder="Testcase Output" />
-                                <button type="button" className="problemlist-remove-button" onClick={() => removeTestcase(index)}>Remove</button>
+                                <button type="button" className="problemlist-remove-button" onClick={() => removeTestcase(index)}>Remove Test Case</button>
                               </div>
                             ))}
                             <button type="button" className="problemlist-add-button" onClick={addTestcase}>Add Testcase</button>

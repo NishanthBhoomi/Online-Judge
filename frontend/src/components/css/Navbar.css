@@ -1,0 +1,44 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #990011; 
+    padding: 15px 30px;
+    color: #FCF6F5; 
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px; 
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; 
+}
+
+.navbar .favicon {
+    height: 32px; 
+}
+
+.navbar h1 {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.nav-link {
+    color: #FCF6F5;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.nav-link:hover {
+    color: #fffb00; 
+}
