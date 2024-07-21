@@ -42,4 +42,8 @@ router.get("/contests/:id/results",Auth,controller.ContestResults);
 
 router.post("/contests/:id/register",Auth, controller.registerForContest);
 router.get("/contests/:id/isRegistered",Auth, controller.checkRegistration);
+
+router.post("/forgotPassword",controller.ForgetPassword);
+router.get("/reset/:id/:token",controller.getResetPassword);
+router.post("/reset/:id/:token",controller.postResetPassword);
 export default router;     

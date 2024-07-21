@@ -8,10 +8,11 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import axios from 'axios';
 import { scheduleResultCalculation } from "./utils.js";
+import nodemailer from "nodemailer";
 dotenv.config();
 
 const compiler_server='https://compiler.codingjudge.online';
-
+const backend_server='https://backend.codingjudge.online';
 const Register = async (req, res) => {
   try {
     // get all the data from the request body
@@ -151,7 +152,7 @@ const Login = async (req, res) => {
     const options = {
       expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
       httpOnly: true,
-      // secure: true
+      secure: true
     };
 
     //send the token
@@ -690,6 +691,85 @@ const DeleteContestSubmission = async (req, res) => {
   }
 };
 
+const ForgetPassword=async(req,res)=>{
+  const {email}=req.body;
+  try {
+    const old= await User.findOne({email});
+    if(!old){
+      return res.status(400).json({message:"User does not exist!"});
+    }
+    const secret=process.env.SECRET_KEY+old.password;
+    const token=jwt.sign({id:old._id,email:old.email},secret ,{expiresIn:"1d"});
+    const link=`${backend_server}/reset/${old._id}/${token}`;
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'noreplycodingjudge@gmail.com',
+        pass: 'syvfkixqtlbspyos'
+      }
+    });
+    
+    var mailOptions = {
+      from: 'youremail@gmail.com',
+      to: `${email}`,
+      subject: 'Password Reset',
+      text: `link to change your password - ${link}`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+
+    res.status(200).json({message:"Email sent successfully",
+      success:true
+    });  
+  } catch (error) {
+    return res.status(401).json({message:"Error while clicking forget password"});
+  }
+};
+
+const getResetPassword=async(req,res)=>{
+  const {id, token}=req.params;
+  const old= await User.findOne({_id:id});
+  if(!old){
+    return res.status(400).json({message:"User does not exist!"});
+  }
+  const secret=process.env.SECRET_KEY+old.password;
+  try {
+    const verify=jwt.verify(token,secret);
+    return res.render("index",{email:verify.email,status:"Not verified"});
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({message:"Error while verifying the token"});
+  }
+};
+
+const postResetPassword=async(req,res)=>{
+  const {id, token}=req.params;
+  const {password,confirmPassword}=req.body;
+  if(password!=confirmPassword){
+    return res.status(401).json({message:"Password and Confirm Password do not match"});
+  }
+  const old= await User.findOne({_id:id});
+  if(!old){
+    return res.status(400).json({message:"User does not exist!"});
+  }
+  const secret=process.env.SECRET_KEY+old.password;
+  try {
+    const verify=jwt.verify(token,secret);
+    const encryptedPassword=await bcrypt.hash(password,10);
+    await User.updateOne({_id:id,},{ $set: { password: encryptedPassword, }, });
+    return res.render("index",{email:verify.email,status:"verified"});
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({message:"Error while updating the password"});
+  }
+};
 const controller = {
   Register,
   Login,
@@ -718,7 +798,10 @@ const controller = {
   ContestResults,
   registerForContest,
   checkRegistration,
-  DeleteContestSubmission
+  DeleteContestSubmission,
+  ForgetPassword,
+  getResetPassword,
+  postResetPassword
 };
 
 export default controller;

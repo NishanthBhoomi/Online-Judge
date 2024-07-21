@@ -36,11 +36,16 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="navbar-left">
                 <img
-                    src="../../favicon/favicon-32x32.png"
+                    src="/assets/favicon/favicon-32x32.png"
                     alt="Coding Judge Favicon"
                     className="favicon"
                 />
                 <h1 onClick={() => navigateTo('/')}>Coding Judge</h1>
+                {!loggedOut && user && user.UserType==="Admin" && (
+                    <span className="nav-link" onClick={() => navigateTo('/admin')}>
+                        Dashboard
+                    </span>
+                )}
                 {!loggedOut && (
                     <>
                         <span className="nav-link" onClick={() => navigateTo('/problems')}>

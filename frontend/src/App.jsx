@@ -13,6 +13,8 @@ import ContestDetails from './components/ContestDetails';
 import CreateContest from './components/CreateContest';
 import ResultsPage from './components/ResultsPage';
 import Navbar from './components/Navbar';
+import ForgotPassword from './components/ForgotPassword';
+
 import './App.css';
 
 function App() {
@@ -49,6 +51,7 @@ function App() {
                 <Route path="/contests/:id" element={<ContestDetails />} />
                 <Route path='/contests/:id/results' element={<ResultsPage/>}/>
                 <Route path="/contest" element={<CreateContest />} />  
+                <Route path="/forgotPassword" element={<ForgotPassword/>} />  
                 <Route path="*" element={<h1> Page not found!</h1>} />
             </Routes>
           </div>

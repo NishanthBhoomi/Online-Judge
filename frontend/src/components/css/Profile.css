@@ -84,6 +84,20 @@
     margin-top: 2rem;
 }
 
+.submission-stats {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.yearly-submissions {
+    list-style: none;
+    padding: 0;
+}
+
+.yearly-submissions li {
+    margin: 5px 0;
+}
+
 @media (max-width: 768px) {
     .profile-container {
         padding: 1rem;

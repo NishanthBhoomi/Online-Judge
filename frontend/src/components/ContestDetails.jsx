@@ -68,6 +68,7 @@ const ContestDetails = () => {
             if (now.getTime() < startTime) {
                 await api.post(`/contests/${id}/register`, {});
                 setIsRegistered(true);
+                alert('You have successfully registered for the contest');
                 setRegistrationError("");
             }else{
                 alert("Contest has already started. You cannot register now.");
@@ -443,7 +444,8 @@ const ContestDetails = () => {
                     <button className="contest-edit-button" onClick={handleEditContestClick}>Edit Contest</button>
                     </>
                 )}
-                {user && !user.isAdmin && !isRegistered && new Date() < new Date(contest.startTime) && (
+                {user && !user.isAdmin && !isRegistered && 
+                    new Date() < new Date(new Date(contest.startTime).getTime() - (5.5 * 60 * 60 * 1000)) && (
                     <button onClick={handleRegister}>Register for Contest</button>
                 )}
                 {registrationError && <p className="registration-error">{registrationError}</p>}

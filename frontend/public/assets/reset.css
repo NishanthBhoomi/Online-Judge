@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap');
+
+.reset-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f3f4f6, #e0e2e7); /* Gradient background */
+    font-family: 'Arial', sans-serif;
+}
+
+.reset-container {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 110%;
+    max-width: 500px;
+}
+
+.reset-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reset-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.reset-heading {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.reset-button {
+    background-color: #007bff; /* Blue color */
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.reset-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .reset-container {
+        padding: 20px;
+    }
+
+    .reset-heading {
+        font-size: 1.5rem; /* Adjusted font size for smaller screens */
+    }
+
+    .reset-button {
+        padding: 10px;
+        font-size: 0.875rem; /* Adjusted font size for smaller screens */
+    }
+}

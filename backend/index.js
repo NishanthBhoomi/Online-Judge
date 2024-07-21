@@ -4,11 +4,14 @@ import router from './routes/routes.js';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 dotenv.config();
 
 const app= express();
 
-// Middleware to log cookies
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 //middlewares
 app.use(cors({
@@ -17,7 +20,12 @@ app.use(cors({
 }));
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:false}));
+
+app.set('views', path.join(__dirname, 'views'));
+app.set("view engine","ejs");
+app.use(express.static(path.join(__dirname, 'views')));
+app.use(express.static('public'));
 
 DBConnection();
 

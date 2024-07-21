@@ -17,7 +17,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response.status === 401 && window.location.pathname!=='/login' && window.location.pathname!=='/register' && window.location.pathname!=='/') {
+    if (error.response.status === 401 && window.location.pathname!=='/login' && window.location.pathname!=='/register' && window.location.pathname!=='/' && window.location.pathname!=='/forgotPassword') {
       alert('Unauthorized, logging out...');
       window.location.href='/login';    
       console.log("Unauthorized, logging out...");

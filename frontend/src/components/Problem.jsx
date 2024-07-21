@@ -9,22 +9,47 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import './css/Problem.css'; 
 
+
+const defaultCode = {
+    cpp: `
+#include <bits/stdc++.h> 
+
+using namespace std;
+
+int main() { 
+
+    cout << "Hello World!"; 
+    
+    return 0; 
+}`,
+    java: `
+public class Main {
+    public static void main(String[] args) {
+
+        System.out.println("Hello World!");
+    
+    }
+}`,
+    py: `
+print("Hello World!")`,
+    c: `
+#include <stdio.h>
+
+int main() {
+    
+    printf("Hello World!");
+    
+    return 0;
+}`
+};
+
 const Problem = () => {
     const { id } = useParams();
     const [problem, setProblem] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [output, setOutput] = useState('');
-    const [code, setCode] = useState(`
-#include <bits/stdc++.h> 
-
-using namespace std;
-
-int main() { 
-    cout << "Hello World!"; 
-    
-    return 0; 
-}`);
+    const [code, setCode] = useState(defaultCode['cpp']);
     const [Language, setLanguage] = useState('cpp');
     const [input, setInput] = useState('');
     const navigate = useNavigate();
@@ -49,6 +74,12 @@ int main() {
         setCode(newCode);
     };
 
+    const LanguageChange = (e) => {
+        const newLanguage = e.target.value;
+        setLanguage(newLanguage);
+        setCode(defaultCode[newLanguage]);
+    };
+
     const handleRunCode = async () => {
         setOutput('');
         const payload = {
@@ -60,6 +91,7 @@ int main() {
 
         try {
             const response = await api.post('/run', payload);
+            console.log(response);
             const data = response.data;
             if (data.output) {
                 setOutput(data.output);
@@ -165,7 +197,7 @@ int main() {
                     <h2>Code Editor</h2>
                     <select
                         value={Language}
-                        onChange={(e) => setLanguage(e.target.value)}
+                        onChange={LanguageChange}
                         className="select-box"
                     >
                         <option value='cpp'>C++</option>

@@ -95,6 +95,9 @@ const Login = () => {
                             ),
                         }}
                     />
+                    <p className="signup">
+                        <Link to="/forgotPassword">Forgot Password?</Link>
+                    </p>
                     {type === "Admin" && (
                         <TextField
                             label="Secret Key"
